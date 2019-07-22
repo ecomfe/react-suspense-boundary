@@ -1,0 +1,40 @@
+{
+  "name": "react-suspense-boundary",
+  "version": "0.0.1",
+  "repository": "git@github.com:ecomfe/react-suspense-boundary.git",
+  "license": "MIT",
+  "author": "otakustay <otakustay@gmail.com>",
+  "files": [
+    "cjs",
+    "es"
+  ],
+  "sideEffects": false,
+  "main": "cjs/index.js",
+  "module": "es/index.js",
+  "scripts": {
+    "build": "skr rollup --clean",
+    "lint": "skr lint src demo *.js",
+    "lint-staged": "npm run lint -- --staged",
+    "prepublishOnly": "npm run test &&& npm run build",
+    "start": "skr dev --src=demo",
+    "test": "skr test --coverage"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint-staged"
+    }
+  },
+  "dependencies": {
+    "fast-json-stable-stringify": "^2.0.0",
+    "prop-types": "^15.7.2"
+  },
+  "devDependencies": {
+    "antd": "^3.20.4",
+    "faker": "^4.1.0",
+    "husky": "^3.0.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "reskript": "^0.19.0",
+    "webpack": "^4.36.1"
+  }
+}
