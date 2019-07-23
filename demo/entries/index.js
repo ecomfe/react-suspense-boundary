@@ -1,7 +1,7 @@
 import {render} from 'react-dom';
-import UserList from '../components/UserList';
+import App from '../components/App';
 
 render(
-    <UserList />,
+    <App />,
     document.body.appendChild(document.createElement('div'))
 );

@@ -15,12 +15,10 @@ const user = () => {
     };
 };
 
-const database = Array(TOTAL_COUNT).fill(null).map(user);
-
 export default {
     async list({pageIndex}) {
         const start = (pageIndex - 1) * PAGE_SIZE;
-        const end = start + PAGE_SIZE;
+        const count = Math.min(PAGE_SIZE, TOTAL_COUNT - start);
 
         await timeout(1500);
 
@@ -28,7 +26,7 @@ export default {
             pageIndex,
             pageSize: PAGE_SIZE,
             total: TOTAL_COUNT,
-            results: database.slice(start, end),
+            results: Array(count).fill(null).map(user),
         };
     },
 };

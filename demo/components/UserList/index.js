@@ -1,7 +1,8 @@
 import {useState, useMemo} from 'react';
-import {Table} from 'antd';
-import {Boundary, useResource, useSnapshot} from '../../../src';
+import {Table, Button} from 'antd';
+import {useResource, useSnapshot} from '../../../src';
 import {users} from '../../api';
+import c from './index.less';
 
 const DEFAULT_LIST = {
     total: 0,
@@ -27,9 +28,9 @@ const columns = [
     },
 ];
 
-const List = ({skeleton}) => {
+const UserList = ({skeleton, controllable}) => {
     const [pageIndex, setPageIndex] = useState(1);
-    const [list] = useResource(skeleton ? DEFAULT_LIST : users.list, {pageIndex});
+    const [list, {expire, refresh}] = useResource(skeleton ? DEFAULT_LIST : users.list, {pageIndex});
     const {total, pageSize, results} = useSnapshot(list.results.length ? list : null, list);
     const pagination = useMemo(
         () => {
@@ -46,22 +47,26 @@ const List = ({skeleton}) => {
     );
 
     return (
-        <Table
-            rowKey="id"
-            columns={columns}
-            dataSource={results}
-            pagination={pagination}
-            loading={skeleton}
-        />
+        <>
+            <header className={c.header}>
+                <Button className={c.action} disabled={!controllable} onClick={expire}>Expire Cache</Button>
+                <Button className={c.action} disabled={!controllable} onClick={refresh}>Refresh List</Button>
+            </header>
+            <Table
+                rowKey="id"
+                columns={columns}
+                dataSource={results}
+                pagination={pagination}
+                loading={skeleton}
+            />
+        </>
     );
 };
 
-List.defaultProps = {
+UserList.defaultProps = {
     skeleton: false,
+    controllable: false,
 };
 
-export default () => (
-    <Boundary cacheMode="function" pendingFallback={<List skeleton />}>
-        <List />
-    </Boundary>
-);
+export default UserList;
+

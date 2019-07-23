@@ -35,14 +35,14 @@ export const useResource = (actionOrMockValue, params) => {
                 value => receive(actionOrMockValue, params, value),
                 reason => error(actionOrMockValue, params, reason)
             );
+            fetch(actionOrMockValue, params, pending);
             return pending;
         },
-        [actionOrMockValue, params, receive, error]
+        [actionOrMockValue, params, fetch, receive, error]
     );
 
     if (!query) {
         const pending = runAction();
-        fetch(actionOrMockValue, params, pending);
         throw pending;
     }
 
