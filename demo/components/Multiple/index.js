@@ -1,8 +1,8 @@
 import {useState} from 'react';
+import {Boundary} from '../../../src';
 import Loading from '../Loading';
 import UserList from '../UserList';
-import HostInfo from './HostInfo';
-import {Boundary} from '../../../src';
+import HostInfo from '../HostInfo';
 import c from './index.less';
 
 export default () => {

@@ -1,5 +1,7 @@
 import faker from 'faker';
 
+const timeout = time => new Promise(resolve => setTimeout(resolve, time));
+
 const item = () => {
     return {
         id: faker.random.uuid(),
@@ -15,12 +17,13 @@ const item = () => {
 const database = Array(10).fill(null).map(item);
 
 export default {
-    list() {
-        return Promise.resolve(database);
+    async list() {
+        await timeout(1000);
+        return database;
     },
 
-    find({id}) {
-        const value = database.find(item => item.id === id);
-        return Promise.resolve(value);
+    async find({id}) {
+        await timeout(1000);
+        return database.find(item => item.id === id);
     },
 };

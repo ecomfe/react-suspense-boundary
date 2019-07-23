@@ -4,7 +4,7 @@ import 'echarts/lib/chart/pie';
 import {Tag} from 'antd';
 import {useResource} from '../../../src';
 import {hosts} from '../../api';
-import c from './HostInfo.less';
+import c from './index.less';
 
 const Row = ({title, children}) => (
     <div className={c.row}>

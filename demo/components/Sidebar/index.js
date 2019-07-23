@@ -8,6 +8,7 @@ export default ({className}) => (
         <nav>
             <NavItem to="/simple">Simple</NavItem>
             <NavItem to="/multiple">Multiple Async Components</NavItem>
+            <NavItem to="/nested">Nested Boundary</NavItem>
             <NavItem to="/function-cache">Function Cache Mode</NavItem>
             <NavItem to="/self-loading">Loading On Self</NavItem>
             <NavItem to="/manual-control">Manual Expire And Refresh</NavItem>
