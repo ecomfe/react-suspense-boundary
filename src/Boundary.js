@@ -56,10 +56,14 @@ export default class extends Component {
     }
 
     putSettled(action, key, query) {
-        const updater = ({pending, settled, forceUpdateIdentifier}) => {
+        const updater = ({cacheMode, pending, settled, forceUpdateIdentifier}) => {
+            // 如果以函数为粒度做缓存，会产生竞态，此时如果在写入结果时，运行中的那个`key`和写入的对不上，直接抛弃掉结果
+            if (cacheMode === 'function' && !pending.find(action, key)) {
+                return null;
+            }
+
             pending.remove(action, key);
             settled.put(action, key, query);
-
             return {forceUpdateIdentifier: forceUpdateIdentifier + 1};
         };
         this.setState(updater);

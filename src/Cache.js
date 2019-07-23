@@ -15,7 +15,7 @@ export default class Cache {
         const keyString = stringify(key);
 
         if (cacheMode === 'function') {
-            cache.set(action, {keyString, query});
+            cache.set(action, {key, keyString, query});
         }
         else {
             const querySet = cache.get(action) || {};

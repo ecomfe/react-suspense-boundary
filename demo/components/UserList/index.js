@@ -61,7 +61,7 @@ List.defaultProps = {
 };
 
 export default () => (
-    <Boundary pendingFallback={<List skeleton />}>
+    <Boundary cacheMode="function" pendingFallback={<List skeleton />}>
         <List />
     </Boundary>
 );
