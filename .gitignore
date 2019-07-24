@@ -1,0 +1,7 @@
+/**
+!/.gitignore
+!/assets/
+!/assets/**
+!/scripts/
+!/scripts/**
+!/index.html
