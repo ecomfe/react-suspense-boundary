@@ -1,4 +1,6 @@
 /* eslint-disable import/unambiguous, import/no-commonjs, import/no-nodejs-modules */
+// const {rules} = require('reskript');
+
 exports.featureMatrix = {
     stable: {},
     dev: {},
@@ -12,4 +14,14 @@ exports.devServer = {
     port: 9010,
 };
 
-exports.addition = () => ({});
+exports.addition = ({usage}) => {
+    if (usage === 'build') {
+        return {
+            output: {
+                publicPath: '/react-suspense-boundary/assets/',
+            },
+        };
+    }
+
+    return {};
+};

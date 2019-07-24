@@ -13,6 +13,7 @@
   "module": "es/index.js",
   "scripts": {
     "build": "skr rollup --clean",
+    "build:demo": "skr build --clean --src=demo",
     "lint": "skr lint src demo *.js",
     "lint-staged": "npm run lint -- --staged",
     "prepublishOnly": "npm run test &&& npm run build",
@@ -33,11 +34,14 @@
     "echarts": "^4.2.1",
     "faker": "^4.1.0",
     "husky": "^3.0.1",
+    "prism-themes": "^1.1.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-icons": "^3.7.0",
     "react-loading": "^2.0.3",
+    "react-refractor": "^1.0.1",
     "react-router-dom": "^5.0.1",
+    "refractor": "^2.10.0",
     "reskript": "^0.19.0",
     "webpack": "^4.36.1"
   },

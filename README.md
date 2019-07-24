@@ -8,7 +8,11 @@ A boundary component working with suspense and error
 npm install react-suspense-boundary
 ```
 
-## Run Demo
+## Demo
+
+See online demo here: [https://ecomfe.github.io/react-suspense-boundary/](https://ecomfe.github.io/react-suspense-boundary/)
+
+You can start demo app yourself by executing:
 
 ```shell
 npm start
