@@ -13,11 +13,15 @@ const SourceCode = ({source, toggle}) => {
         () => source
             .replace('../../../src', 'react-suspense-boundary')
             .replace(/import SourceCode from.+\n/, '')
-            .replace(/\/\/ eslint-disable-next-line import\/no-webpack-loader-syntax.+\n/, '')
-            .replace(/import source from '..\/SourceCode\/loader.+\n/, '')
-            .replace(/\s+<SourceCode .+/, '')
-            .replace(/\n{3,}/, '\n\n'),
+            .replace(/\/\/ eslint-disable-next-line import\/no-webpack-loader-syntax.+\n/g, '')
+            .replace(/import source from '..\/SourceCode\/loader.+\n/g, '')
+            .replace(/\s+<SourceCode .+/g, '')
+            .replace(/\n{3,}/g, '\n\n'),
         [source]
+    );
+    const lineNumbers = useMemo(
+        () => text.split('\n').map((t, i) => i + 1),
+        [text]
     );
 
     return (
@@ -30,7 +34,10 @@ const SourceCode = ({source, toggle}) => {
                     </span>
                 )
             }
-            <div className={c.code} style={{display: visible ? 'block' : 'none'}}>
+            <div className={c.code} style={{display: visible ? '' : 'none'}}>
+                <div className={c.gutter}>
+                    {lineNumbers.map(i => <span key={i} className={c.lineNumber}>{i}</span>)}
+                </div>
                 <Refractor language="jsx" value={text} />
             </div>
         </div>

@@ -9,10 +9,13 @@ import source from '../SourceCode/loader!./index.js';
 import c from './index.less';
 
 const Error = ({message}) => (
-    <div className={c.error}>
-        <FaBug style={{fill: '#d8000c'}} />
-        {message}
-    </div>
+    <>
+        <div className={c.error}>
+            <FaBug className={c.errorIcon} />
+            Oops! {message}
+        </div>
+        <SourceCode source={source} />
+    </>
 );
 
 const renderError = error => <Error message={error.message} />;
@@ -23,7 +26,7 @@ export default () => (
             type="warning"
             message={
                 <>
-                    This example is not working as expected currently due to
+                    This example may not work as expected in development mode due to
                     {' '}
                     <a
                         target="_blank"
