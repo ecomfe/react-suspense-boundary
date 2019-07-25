@@ -43,20 +43,6 @@ export default class extends Component {
 
     contextValue = null;
 
-    static getDerivedStateFromProps(props, state) {
-        const {cacheMode} = props;
-
-        if (state.cacheMode !== cacheMode) {
-            return {
-                cacheMode: cacheMode,
-                pending: new Cache(cacheMode),
-                settled: new Cache(cacheMode),
-            };
-        }
-
-        return null;
-    }
-
     putSettled(action, key, query) {
         const updater = ({cacheMode, pending, settled, forceUpdateIdentifier}) => {
             // 如果以函数为粒度做缓存，会产生竞态，此时如果在写入结果时，运行中的那个`key`和写入的对不上，直接抛弃掉结果
@@ -127,6 +113,20 @@ export default class extends Component {
         };
         this.setState(updater);
     };
+
+    static getDerivedStateFromProps(props, state) {
+        const {cacheMode} = props;
+
+        if (state.cacheMode !== cacheMode) {
+            return {
+                cacheMode: cacheMode,
+                pending: new Cache(cacheMode),
+                settled: new Cache(cacheMode),
+            };
+        }
+
+        return null;
+    }
 
     static getDerivedStateFromError(error) {
         return {error};

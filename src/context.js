@@ -22,16 +22,15 @@ export const useResource = (actionOrMockValue, params) => {
 
     if (typeof actionOrMockValue !== 'function') {
         // 这里2个`useCallback`必须要，和后面的能对齐hook数量
-        const refresh = useCallback(noop, []);
-        const expire = useCallback(noop, []);
-        return [actionOrMockValue, {refresh, expire}];
+        const refresh = useCallback(noop, [actionOrMockValue, params, fetch, receive, error]);
+        const expireCache = useCallback(noop, [actionOrMockValue, expire, params]);
+        return [actionOrMockValue, {refresh, expire: expireCache}];
     }
 
     const query = find(actionOrMockValue, params);
     const runAction = useCallback(
         () => {
-            const pending = actionOrMockValue(params);
-            pending.then(
+            const pending = actionOrMockValue(params).then(
                 value => receive(actionOrMockValue, params, value),
                 reason => error(actionOrMockValue, params, reason)
             );
