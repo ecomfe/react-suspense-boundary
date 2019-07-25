@@ -1,4 +1,4 @@
-import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
+import {HashRouter, Switch, Route, Redirect} from 'react-router-dom';
 import Header from '../Header';
 import Sidebar from '../Sidebar';
 import Simple from '../Simple';
@@ -12,7 +12,7 @@ import RelatedSource from '../RelatedSource';
 import c from './index.less';
 
 export default () => (
-    <BrowserRouter basename="/react-suspense-boundary/">
+    <HashRouter>
         <div className={c.root}>
             <Header />
             <div className={c.content}>
@@ -32,5 +32,5 @@ export default () => (
                 </main>
             </div>
         </div>
-    </BrowserRouter>
+    </HashRouter>
 );
