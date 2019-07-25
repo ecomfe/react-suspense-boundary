@@ -1,4 +1,4 @@
-import {Component, Suspense, createElement, cloneElement} from 'react';
+import {Component, Suspense, createElement} from 'react';
 import PropTypes from 'prop-types';
 import {Context} from './context';
 import Cache from './Cache';
@@ -13,14 +13,16 @@ export default class extends Component {
         cacheMode: PropTypes.oneOf(['function', 'key']),
         children: PropTypes.node.isRequired,
         pendingFallback: PropTypes.node,
-        errorFallback: PropTypes.node,
+        renderError: PropTypes.func,
     };
 
     static defaultProps = {
         is: 'div',
         cacheMode: 'key',
         pendingFallback: 'pending',
-        errorFallback: 'error',
+        renderError() {
+            return 'error';
+        },
     };
 
     state = {
@@ -135,17 +137,13 @@ export default class extends Component {
     }
 
     render() {
-        const {is, children, pendingFallback, errorFallback, ...props} = this.props;
+        const {is, children, pendingFallback, renderError, ...props} = this.props;
         const {error} = this.state;
         const contextValue = this.computeContextValue(this.state);
         const content = (
             <Context.Provider value={contextValue}>
                 <Suspense fallback={pendingFallback}>
-                    {
-                        error
-                            ? cloneElement(errorFallback, {error: error.message})
-                            : children
-                    }
+                    {error ? renderError(error) : children}
                 </Suspense>
             </Context.Provider>
         );
