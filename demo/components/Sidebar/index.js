@@ -30,6 +30,7 @@ export default ({className}) => (
             <NavItem to="/function-cache">Function Cache Mode</NavItem>
             <NavItem to="/self-loading">Loading On Self</NavItem>
             <NavItem to="/manual-control">Manual Expire And Refresh</NavItem>
+            <NavItem to="/async-error">Async Error Boundary</NavItem>
         </nav>
         <h3 className={c.title}>Related Source</h3>
         <nav>

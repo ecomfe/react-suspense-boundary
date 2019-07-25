@@ -1,6 +1,6 @@
 import faker from 'faker';
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10;
 const TOTAL_COUNT = 230;
 
 const timeout = time => new Promise(resolve => setTimeout(resolve, time));
@@ -28,5 +28,11 @@ export default {
             total: TOTAL_COUNT,
             results: Array(count).fill(null).map(user),
         };
+    },
+
+    async mustCrash() {
+        await timeout(1000);
+
+        throw new Error('invoked a function that will 100% crash');
     },
 };

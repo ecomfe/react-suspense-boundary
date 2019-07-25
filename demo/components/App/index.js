@@ -7,11 +7,12 @@ import Nested from '../Nested';
 import FunctionCache from '../FunctionCache';
 import SelfLoading from '../SelfLoading';
 import ManualControl from '../ManualControl';
+import AsyncError from '../AsyncError';
 import RelatedSource from '../RelatedSource';
 import c from './index.less';
 
 export default () => (
-    <BrowserRouter>
+    <BrowserRouter basename="/react-suspense-boundary/">
         <div className={c.root}>
             <Header />
             <div className={c.content}>
@@ -24,6 +25,7 @@ export default () => (
                         <Route path="/function-cache" component={FunctionCache} />
                         <Route path="/self-loading" component={SelfLoading} />
                         <Route path="/manual-control" component={ManualControl} />
+                        <Route path="/async-error" component={AsyncError} />
                         <Route path="/source/:filename" component={RelatedSource} />
                         <Redirect to="/simple" />
                     </Switch>
