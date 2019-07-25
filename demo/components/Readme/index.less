@@ -1,0 +1,48 @@
+.root {
+    margin-left: 20px;
+    font-size: 14px;
+    line-height: 1.5;
+
+    h1 {
+        font-size: 30px;
+        font-weight: bold;
+    }
+
+    h2 {
+        margin-top: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ddd;
+        font-size: 24px;
+        font-weight: bold;
+
+        &::before {
+            content: "#";
+            display: inline-block;
+            margin-right: .5em;
+            color: #aaa;
+        }
+    }
+
+    h3 {
+        font-size: 18px;
+    }
+
+    code {
+        color: #c7254e;
+    }
+
+    pre {
+        margin: 0;
+    }
+
+    .code {
+        background-color: #f6f8fa;
+        border-radius: 4px;
+        padding: 10px;
+        margin-bottom: 1.5ex;
+
+        code {
+            color: #333;
+        }
+    }
+}

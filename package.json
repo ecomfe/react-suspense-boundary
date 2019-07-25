@@ -39,6 +39,7 @@
     "react-dom": "^16.8.6",
     "react-icons": "^3.7.0",
     "react-loading": "^2.0.3",
+    "react-markdown": "^4.1.0",
     "react-refractor": "^1.0.1",
     "react-router-dom": "^5.0.1",
     "refractor": "^2.10.0",

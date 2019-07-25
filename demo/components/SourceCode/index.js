@@ -2,12 +2,16 @@ import {useReducer, useMemo} from 'react';
 import {FaCode} from 'react-icons/fa';
 import Refractor from 'react-refractor';
 import jsx from 'refractor/lang/jsx';
+import tsx from 'refractor/lang/tsx';
+import bash from 'refractor/lang/bash';
 import 'prism-themes/themes/prism-vs.css';
 import c from './index.less';
 
 Refractor.registerLanguage(jsx);
+Refractor.registerLanguage(tsx);
+Refractor.registerLanguage(bash);
 
-const SourceCode = ({source, toggle}) => {
+const SourceCode = ({className, source, toggle, language}) => {
     const [visible, toggleVisible] = useReducer(v => !v, !toggle);
     const text = useMemo(
         () => source
@@ -25,7 +29,7 @@ const SourceCode = ({source, toggle}) => {
     );
 
     return (
-        <div className={c.root}>
+        <div className={className || c.root}>
             {
                 toggle && (
                     <span className={c.toggle} onClick={toggleVisible}>
@@ -38,7 +42,7 @@ const SourceCode = ({source, toggle}) => {
                 <div className={c.gutter}>
                     {lineNumbers.map(i => <span key={i} className={c.lineNumber}>{i}</span>)}
                 </div>
-                <Refractor language="jsx" value={text} />
+                <Refractor language={language} value={text} />
             </div>
         </div>
     );
@@ -46,6 +50,7 @@ const SourceCode = ({source, toggle}) => {
 
 SourceCode.defaultProps = {
     toggle: true,
+    language: 'jsx',
 };
 
 export default SourceCode;

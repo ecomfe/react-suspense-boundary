@@ -39,6 +39,7 @@ export default ({className}) => (
         </nav>
         <h3 className={c.title}>Resources</h3>
         <nav>
+            <NavItem to="/readme">README</NavItem>
             <NavItem external to="https://reactjs.org/docs/react-api.html#reactsuspense">React Suspense</NavItem>
         </nav>
     </aside>
