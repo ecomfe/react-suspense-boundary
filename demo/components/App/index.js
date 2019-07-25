@@ -7,6 +7,7 @@ import Nested from '../Nested';
 import FunctionCache from '../FunctionCache';
 import SelfLoading from '../SelfLoading';
 import ManualControl from '../ManualControl';
+import RelatedSource from '../RelatedSource';
 import c from './index.less';
 
 export default () => (
@@ -23,6 +24,7 @@ export default () => (
                         <Route path="/function-cache" component={FunctionCache} />
                         <Route path="/self-loading" component={SelfLoading} />
                         <Route path="/manual-control" component={ManualControl} />
+                        <Route path="/source/:filename" component={RelatedSource} />
                         <Redirect to="/simple" />
                     </Switch>
                 </main>

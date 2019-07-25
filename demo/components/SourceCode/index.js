@@ -7,8 +7,8 @@ import c from './index.less';
 
 Refractor.registerLanguage(jsx);
 
-export default ({source}) => {
-    const [visible, toggle] = useReducer(v => !v, false);
+const SourceCode = ({source, toggle}) => {
+    const [visible, toggleVisible] = useReducer(v => !v, !toggle);
     const text = useMemo(
         () => source
             .replace('../../../src', 'react-suspense-boundary')
@@ -22,13 +22,23 @@ export default ({source}) => {
 
     return (
         <div className={c.root}>
-            <span className={c.toggle} onClick={toggle}>
-                <FaCode style={{marginRight: '.3em'}} />
-                {visible ? 'Hide Source' : 'View Source'}
-            </span>
+            {
+                toggle && (
+                    <span className={c.toggle} onClick={toggleVisible}>
+                        <FaCode style={{marginRight: '.3em'}} />
+                        {visible ? 'Hide Source' : 'View Source'}
+                    </span>
+                )
+            }
             <div className={c.code} style={{display: visible ? 'block' : 'none'}}>
                 <Refractor language="jsx" value={text} />
             </div>
         </div>
     );
 };
+
+SourceCode.defaultProps = {
+    toggle: true,
+};
+
+export default SourceCode;
