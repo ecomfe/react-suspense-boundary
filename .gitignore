@@ -62,3 +62,4 @@ typings/
 /es
 /cjs
 /dist
+.DS_Store

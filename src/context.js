@@ -1,24 +1,16 @@
 import {createContext, useContext, useCallback} from 'react';
+import invariant from 'tiny-invariant';
 
 const noop = () => undefined;
 
-const DEFAULT_VALUE = {
-    cache: {},
-    find: noop,
-    fetch: noop,
-    receive: noop,
-    error: noop,
-    expire: noop,
-    saveSnapshot: noop,
-    getSnapshot: noop,
-};
-
-export const Context = createContext(DEFAULT_VALUE);
+export const Context = createContext(null);
 Context.displayName = 'SuspenseBoundaryContext';
 
 /* eslint-disable react-hooks/rules-of-hooks */
 export const useResource = (actionOrMockValue, params) => {
-    const {find, fetch, receive, error, expire} = useContext(Context);
+    const suspenseContext = useContext(Context);
+    invariant(suspenseContext, 'You should not use useResource outside a <Boundary>');
+    const {find, fetch, receive, error, expire} = suspenseContext;
 
     if (typeof actionOrMockValue !== 'function') {
         // 这里2个`useCallback`必须要，和后面的能对齐hook数量
@@ -69,7 +61,9 @@ export const useResource = (actionOrMockValue, params) => {
 /* eslint-enable react-hooks/rules-of-hooks */
 
 export const useSnapshot = (currentValue, initialValue) => {
-    const {saveSnapshot, getSnapshot} = useContext(Context);
+    const suspenseContext = useContext(Context);
+    invariant(suspenseContext, 'You should not use useSnapshot outside a <Boundary>');
+    const {saveSnapshot, getSnapshot} = suspenseContext;
     saveSnapshot(currentValue, initialValue);
     return getSnapshot();
 };

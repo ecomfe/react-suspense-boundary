@@ -12,6 +12,7 @@ exports.build = {
 
 exports.devServer = {
     port: 9010,
+    hot: 'all',
 };
 
 exports.addition = ({usage}) => {

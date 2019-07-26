@@ -6,7 +6,7 @@ import {omit} from './utils';
 
 const UNINITIALIZED = {};
 
-export default class extends Component {
+export default class SuspenseBoundary extends Component {
 
     static propTypes = {
         is: PropTypes.elementType,
