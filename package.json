@@ -16,7 +16,8 @@
     "build:demo": "skr build --clean --src=demo",
     "lint": "skr lint src demo *.js",
     "lint-staged": "npm run lint -- --staged",
-    "prepublishOnly": "npm run test &&& npm run build",
+    "prepublishOnly": "npm run build",
+    "deploy": "npm publish --registry=https://registry.npmjs.com",
     "start": "skr dev --src=demo",
     "test": "skr test --coverage"
   },
