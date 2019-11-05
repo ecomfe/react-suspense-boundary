@@ -1,18 +1,47 @@
 import {createContext, useContext, useCallback} from 'react';
 import invariant from 'tiny-invariant';
 
+export type Fetch<I, O> = (args: I) => Promise<O>;
+
+interface ResourceController {
+    refresh(): void;
+    expire(): void;
+}
+
+export type Resource<T> = [T, ResourceController];
+
+export interface Query<T> {
+    pending?: Promise<void>;
+    error?: Error;
+    data?: T;
+}
+
+export interface SuspenseContext {
+    find<I, O>(action: Fetch<I, O>, args: I): Query<O>;
+    fetch<I, O>(action: Fetch<I, O>, params: I, pending: Promise<void>): void;
+    receive<I, O>(action: Fetch<I, O>, params: I, data: O): void;
+    error<I, O>(action: Fetch<I, O>, params: I, reason: Error): void;
+    expire<I, O>(action: Fetch<I, O>, params: I): void;
+    saveSnapshot<T>(currentValue: T, initialValue: T): void;
+    getSnapshot<T>(): T;
+}
+
 const noop = () => undefined;
 
-export const Context = createContext(null);
+export const Context = createContext<SuspenseContext | null>(null);
 Context.displayName = 'SuspenseBoundaryContext';
 
+const isMock = <I, O>(actionOrMockValue: Fetch<I, O> | O): actionOrMockValue is O => {
+    return typeof actionOrMockValue !== 'function';
+};
+
 /* eslint-disable react-hooks/rules-of-hooks */
-export const useResource = (actionOrMockValue, params) => {
+export const useResource = <I, O>(actionOrMockValue: Fetch<I, O> | O, params: I): Resource<O> => {
     const suspenseContext = useContext(Context);
     invariant(suspenseContext, 'You should not use useResource outside a <Boundary>');
-    const {find, fetch, receive, error, expire} = suspenseContext;
+    const {find, fetch, receive, error, expire} = suspenseContext as SuspenseContext;
 
-    if (typeof actionOrMockValue !== 'function') {
+    if (isMock(actionOrMockValue)) {
         // 这里2个`useCallback`必须要，和后面的能对齐hook数量
         const refresh = useCallback(noop, [actionOrMockValue, params, fetch, receive, error]);
         const expireCache = useCallback(noop, [actionOrMockValue, expire, params]);
@@ -51,7 +80,7 @@ export const useResource = (actionOrMockValue, params) => {
     );
 
     return [
-        query.data,
+        query.data as O,
         {
             expire: expireCache,
             refresh: runAction,
@@ -60,10 +89,10 @@ export const useResource = (actionOrMockValue, params) => {
 };
 /* eslint-enable react-hooks/rules-of-hooks */
 
-export const useSnapshot = (currentValue, initialValue) => {
+export const useSnapshot = <T>(currentValue: T, initialValue: T): T => {
     const suspenseContext = useContext(Context);
     invariant(suspenseContext, 'You should not use useSnapshot outside a <Boundary>');
-    const {saveSnapshot, getSnapshot} = suspenseContext;
+    const {saveSnapshot, getSnapshot} = suspenseContext as SuspenseContext;
     saveSnapshot(currentValue, initialValue);
     return getSnapshot();
 };

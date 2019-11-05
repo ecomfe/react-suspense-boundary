@@ -1,2 +1,2 @@
-export Boundary from './Boundary';
+export {default as Boundary} from './Boundary';
 export {useResource, useSnapshot} from './context';

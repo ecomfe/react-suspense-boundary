@@ -1,0 +1,9 @@
+{
+    "extends": "./node_modules/reskript/config/tsconfig.json",
+    "compilerOptions": {
+        "jsx": "preserve",
+        "noEmit": false,
+        "declaration": true,
+        "outDir": "es"
+    }
+}
