@@ -7,7 +7,7 @@ export interface WithBoundaryOptions<P> extends Partial<Omit<SuspenseBoundaryPro
     pendingFallback?: Factory<SuspenseBoundaryProps['pendingFallback'], P>;
 }
 
-export function withBoundary<P>(options: WithBoundaryOptions<P> = {}) {
+export function withBoundary<P = {}>(options: WithBoundaryOptions<P> = {}) {
     const {is = Fragment, pendingFallback: pendingFactory, ...boundaryProps} = options;
 
     return (ComponentIn: ComponentType<P>): SFC<P> => {
