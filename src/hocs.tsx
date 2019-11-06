@@ -3,7 +3,7 @@ import Boundary, {SuspenseBoundaryProps} from './Boundary';
 
 type Factory<T, P> = T | ((props: P) => T);
 
-export interface WithBoundaryOptions<P> extends Partial<Omit<SuspenseBoundaryProps, 'pendingFallback'>> {
+export interface WithBoundaryOptions<P = {}> extends Partial<Omit<SuspenseBoundaryProps, 'pendingFallback'>> {
     pendingFallback?: Factory<SuspenseBoundaryProps['pendingFallback'], P>;
 }
 
