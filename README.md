@@ -92,3 +92,26 @@ Other than the result itself, the second object of `useResource`'s returned arra
 
 - `expire` will immediately remove the cached result, causing the upper `Boundary` to be pending until `action` is resolved the next time.
 - `refresh` is a function to run `action` again without removing previously cached result.
+
+### withBoundary
+
+To wrap a single component with `Boundary`, unlike directly create `<Boundary>` element, this HOC has 2 different options:
+
+- `pendingFallback` is changed to `createPendingFallback` function which receives props from wrapped component.
+- `is` has a default value of `Fragment` since a single component doesn't require an extra wrap element.
+
+```javascript
+import {withBoundary, useResource} from 'react-suspense-boundary';
+
+const Foo = props => {
+    const [value] = useResource(fetchValue, props.name);
+    return <span>value is: ${value}</span>;
+};
+
+const boundary = {
+    createPendingFallback(props) {
+        return <span>loading {props.name}</span>;
+    }
+};
+
+export default withBoundary(boundary)(Foo);
