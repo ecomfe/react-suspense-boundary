@@ -97,7 +97,7 @@ Other than the result itself, the second object of `useResource`'s returned arra
 
 To wrap a single component with `Boundary`, unlike directly create `<Boundary>` element, this HOC has 2 different options:
 
-- `pendingFallback` is changed to `createPendingFallback` function which receives props from wrapped component.
+- `pendingFallback` can be a function which receives props from wrapped component.
 - `is` has a default value of `Fragment` since a single component doesn't require an extra wrap element.
 
 ```javascript

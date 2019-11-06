@@ -1,20 +1,18 @@
 import {ComponentType, SFC, Fragment} from 'react';
 import Boundary, {SuspenseBoundaryProps} from './Boundary';
 
+type Factory<T, P> = T | ((props: P) => T);
+
 interface WithBoundaryOptions<P> extends Partial<Omit<SuspenseBoundaryProps, 'pendingFallback'>> {
-    createPendingFallback?(props: P): SuspenseBoundaryProps['pendingFallback'];
+    pendingFallback?: Factory<SuspenseBoundaryProps['pendingFallback'], P>;
 }
 
 export function withBoundary<P>(options: WithBoundaryOptions<P> = {}) {
-    const {
-        is = Fragment,
-        createPendingFallback = () => undefined,
-        ...boundaryProps
-    } = options;
+    const {is = Fragment, pendingFallback: pendingFactory, ...boundaryProps} = options;
 
     return (ComponentIn: ComponentType<P>): SFC<P> => {
         const ComponentOut: SFC<P> = props => {
-            const pendingFallback = createPendingFallback(props);
+            const pendingFallback = typeof pendingFactory === 'function' ? pendingFactory(props) : pendingFactory;
             return (
                 <Boundary is={is} pendingFallback={pendingFallback} {...boundaryProps}>
                     <ComponentIn {...props} />
