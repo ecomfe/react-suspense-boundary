@@ -89,6 +89,24 @@ export const useResource = <I, O>(actionOrMockValue: Fetch<I, O> | O, params: I)
 };
 /* eslint-enable react-hooks/rules-of-hooks */
 
+export const useResourceWithMock = <I, O>(actionOrMockValue: Fetch<I, O> | O, mockValue: O, params: I): Resource<O> => {
+    try {
+        return useResource(actionOrMockValue, params);
+    }
+    catch (ex) {
+        if (typeof ex.then === 'function') {
+            return [
+                mockValue,
+                {
+                    expire: noop,
+                    refresh: noop,
+                },
+            ];
+        }
+        throw ex;
+    }
+};
+
 export const useSnapshot = <T>(currentValue: T, initialValue: T): T => {
     const suspenseContext = useContext(Context);
     invariant(suspenseContext, 'You should not use useSnapshot outside a <Boundary>');
