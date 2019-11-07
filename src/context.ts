@@ -60,6 +60,10 @@ export const useResource = <I, O>(actionOrMockValue: Fetch<I, O> | O, params: I)
         },
         [actionOrMockValue, params, fetch, receive, error]
     );
+    const expireCache = useCallback(
+        () => expire(actionOrMockValue, params),
+        [actionOrMockValue, expire, params]
+    );
 
     if (!query) {
         const pending = runAction();
@@ -73,11 +77,6 @@ export const useResource = <I, O>(actionOrMockValue: Fetch<I, O> | O, params: I)
     if (query.error) {
         throw query.error;
     }
-
-    const expireCache = useCallback(
-        () => expire(actionOrMockValue, params),
-        [actionOrMockValue, expire, params]
-    );
 
     return [
         query.data as O,
