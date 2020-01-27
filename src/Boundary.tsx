@@ -1,5 +1,5 @@
-import {Component, Suspense, createElement, ElementType, ReactNode} from 'react';
-import PropTypes from 'prop-types';
+import {Component, Suspense, createElement, ElementType, ReactNode, HTMLAttributes} from 'react';
+import * as PropTypes from 'prop-types';
 import {Context, SuspenseContext, Fetch, Query} from './context';
 import Cache, {CacheMode} from './Cache';
 import {omit} from './utils';
@@ -8,7 +8,7 @@ const UNINITIALIZED = {};
 
 type OmitUndefined<T> = T extends undefined ? never : T;
 
-export interface SuspenseBoundaryProps {
+export interface SuspenseBoundaryProps<T = HTMLDivElement> extends Omit<HTMLAttributes<T>, 'is'> {
     is: ElementType;
     cacheMode: CacheMode;
     pendingFallback: OmitUndefined<ReactNode>;
@@ -25,7 +25,7 @@ interface State {
     forceUpdateIdentifier: number;
 }
 
-export default class SuspenseBoundary extends Component<SuspenseBoundaryProps, State> {
+export default class SuspenseBoundary<T> extends Component<SuspenseBoundaryProps<T>, State> {
 
     static propTypes = {
         is: PropTypes.elementType,
@@ -52,7 +52,7 @@ export default class SuspenseBoundary extends Component<SuspenseBoundaryProps, S
 
     contextValue: SuspenseContext | null;
 
-    constructor(props: SuspenseBoundaryProps) {
+    constructor(props: SuspenseBoundaryProps<T>) {
         super(props);
         this.state = {
             error: null,
@@ -67,7 +67,7 @@ export default class SuspenseBoundary extends Component<SuspenseBoundaryProps, S
         this.contextValue = null;
     }
 
-    static getDerivedStateFromProps(props: SuspenseBoundaryProps, state: State): Partial<State> | null {
+    static getDerivedStateFromProps(props: SuspenseBoundaryProps<HTMLElement>, state: State): Partial<State> | null {
         const {cacheMode} = props;
 
         if (state.cacheMode !== cacheMode) {
