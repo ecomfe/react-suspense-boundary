@@ -1,4 +1,3 @@
-/* eslint-disable import/unambiguous, import/no-commonjs, import/no-nodejs-modules */
 // const {rules} = require('reskript');
 
 exports.featureMatrix = {
@@ -25,4 +24,10 @@ exports.addition = ({usage}) => {
     }
 
     return {};
+};
+
+exports.rollup = {
+    namedDependencyExports: {
+        'prop-types': ['elementType', 'oneOf', 'node', 'func'],
+    },
 };

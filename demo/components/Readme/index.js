@@ -2,7 +2,6 @@ import {useRef, useEffect, useReducer} from 'react';
 import {render} from 'react-dom';
 import Markdown from 'react-markdown';
 import SourceCode from '../SourceCode';
-// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved, import/extensions
 import readme from '../SourceCode/loader!../../../README.md';
 import c from './index.less';
 

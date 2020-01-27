@@ -1,4 +1,3 @@
-/* eslint-disable import/unambiguous, import/no-commonjs, import/no-nodejs-modules */
 const fs = require('fs');
 
 module.exports = function sourceCodeLoader() {

@@ -12,7 +12,7 @@
   "main": "cjs/index.js",
   "module": "es/index.js",
   "scripts": {
-    "build": "skr rollup --clean",
+    "build": "skr rollup --clean --mode=development",
     "build:demo": "skr build --clean --src=demo",
     "lint": "skr lint src demo *.js",
     "lint-staged": "npm run lint -- --staged",
@@ -37,7 +37,7 @@
     "antd": "^3.25.0",
     "echarts": "^4.4.0",
     "faker": "^4.1.0",
-    "husky": "^3.0.9",
+    "husky": "^4.2.1",
     "prism-themes": "^1.3.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
@@ -47,7 +47,7 @@
     "react-refractor": "^1.0.1",
     "react-router-dom": "^5.1.2",
     "refractor": "^2.10.0",
-    "reskript": "^0.21.0",
+    "reskript": "^0.25.3",
     "webpack": "^4.41.2"
   },
   "peerDependencies": {

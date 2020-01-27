@@ -4,7 +4,6 @@ import Loading from '../Loading';
 import UserList from '../UserList';
 import HostInfo from '../HostInfo';
 import SourceCode from '../SourceCode';
-// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved, import/extensions
 import source from '../SourceCode/loader!./index.js';
 import c from './index.less';
 
