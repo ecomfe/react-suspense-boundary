@@ -11,10 +11,12 @@ export default () => {
     const [key, setKey] = useState('');
 
     return (
-        <Boundary className={c.root} pendingFallback={<Loading />}>
-            <HostInfo selected={key} onHostChange={setKey} />
-            <UserList />
-            <SourceCode source={source} />
-        </Boundary>
+        <div className={c.root}>
+            <Boundary pendingFallback={<Loading />}>
+                <HostInfo selected={key} onHostChange={setKey} />
+                <UserList />
+                <SourceCode source={source} />
+            </Boundary>
+        </div>
     );
 };

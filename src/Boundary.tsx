@@ -1,15 +1,13 @@
-import {Component, Suspense, createElement, ElementType, ReactNode, HTMLAttributes} from 'react';
+import {Component, Suspense, ReactNode} from 'react';
 import * as PropTypes from 'prop-types';
 import {Context, SuspenseContext, Fetch, Query} from './context';
 import Cache, {CacheMode} from './Cache';
-import {omit} from './utils';
 
 const UNINITIALIZED = {};
 
 type OmitUndefined<T> = T extends undefined ? never : T;
 
-export interface SuspenseBoundaryProps<T = HTMLDivElement> extends Omit<HTMLAttributes<T>, 'is'> {
-    is: ElementType;
+export interface SuspenseBoundaryProps {
     cacheMode: CacheMode;
     pendingFallback: OmitUndefined<ReactNode>;
     renderError(error: Error): ReactNode;
@@ -25,7 +23,7 @@ interface State {
     forceUpdateIdentifier: number;
 }
 
-export default class SuspenseBoundary<T> extends Component<SuspenseBoundaryProps<T>, State> {
+export default class SuspenseBoundary<T> extends Component<SuspenseBoundaryProps, State> {
 
     static propTypes = {
         is: PropTypes.elementType,
@@ -52,7 +50,7 @@ export default class SuspenseBoundary<T> extends Component<SuspenseBoundaryProps
 
     contextValue: SuspenseContext | null;
 
-    constructor(props: SuspenseBoundaryProps<T>) {
+    constructor(props: SuspenseBoundaryProps) {
         super(props);
         this.state = {
             error: null,
@@ -67,7 +65,7 @@ export default class SuspenseBoundary<T> extends Component<SuspenseBoundaryProps
         this.contextValue = null;
     }
 
-    static getDerivedStateFromProps(props: SuspenseBoundaryProps<HTMLElement>, state: State): Partial<State> | null {
+    static getDerivedStateFromProps(props: SuspenseBoundaryProps, state: State): Partial<State> | null {
         const {cacheMode} = props;
 
         if (state.cacheMode !== cacheMode) {
@@ -160,17 +158,15 @@ export default class SuspenseBoundary<T> extends Component<SuspenseBoundaryProps
     }
 
     render() {
-        const {is, children, pendingFallback, renderError, ...props} = this.props;
+        const {children, pendingFallback, renderError} = this.props;
         const {error} = this.state;
         const contextValue = this.computeContextValue();
-        const content = (
+        return (
             <Context.Provider value={contextValue}>
                 <Suspense fallback={pendingFallback}>
                     {error ? renderError(error) : children}
                 </Suspense>
             </Context.Provider>
         );
-
-        return createElement(is, omit(props, 'cacheMode'), content);
     }
 }

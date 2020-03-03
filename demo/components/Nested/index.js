@@ -1,4 +1,4 @@
-import {useState, Fragment} from 'react';
+import {useState} from 'react';
 import {Boundary} from '../../../src';
 import Loading from '../Loading';
 import UserList from '../UserList';
@@ -11,12 +11,14 @@ export default () => {
     const [selected, select] = useState('');
 
     return (
-        <Boundary className={c.root} pendingFallback={<Loading />}>
-            <Boundary is={Fragment} pendingFallback={<Loading style={{minHeight: 240}} />}>
-                <HostInfo selected={selected} onHostChange={select} />
+        <div className={c.root}>
+            <Boundary pendingFallback={<Loading />}>
+                <Boundary pendingFallback={<Loading style={{minHeight: 240}} />}>
+                    <HostInfo selected={selected} onHostChange={select} />
+                </Boundary>
+                <UserList />
+                <SourceCode source={source} />
             </Boundary>
-            <UserList />
-            <SourceCode source={source} />
-        </Boundary>
+        </div>
     );
 };
