@@ -31,11 +31,13 @@ export default ({className}) => (
             <NavItem to="/self-loading">Loading On Self</NavItem>
             <NavItem to="/manual-control">Manual Expire And Refresh</NavItem>
             <NavItem to="/async-error">Async Error Boundary</NavItem>
+            <NavItem to="/error-recovery">Recover From Error</NavItem>
         </nav>
         <h3 className={c.title}>Related Source</h3>
         <nav>
             <NavItem to="/source/HostInfo">HostInfo</NavItem>
             <NavItem to="/source/UserList">UserList</NavItem>
+            <NavItem to="/source/Progress">Progress</NavItem>
         </nav>
         <h3 className={c.title}>Resources</h3>
         <nav>

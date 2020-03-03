@@ -1,6 +1,7 @@
 import {Component, Suspense, ReactNode} from 'react';
 import * as PropTypes from 'prop-types';
 import {Context, SuspenseContext, Fetch, Query} from './context';
+import SuspenseError from './SuspenseError';
 import Cache, {CacheMode} from './Cache';
 
 const UNINITIALIZED = {};
@@ -10,7 +11,7 @@ type OmitUndefined<T> = T extends undefined ? never : T;
 export interface SuspenseBoundaryProps {
     cacheMode: CacheMode;
     pendingFallback: OmitUndefined<ReactNode>;
-    renderError(error: Error): ReactNode;
+    renderError(error: Error, recover: () => void): ReactNode;
 }
 
 interface State {
@@ -23,7 +24,7 @@ interface State {
     forceUpdateIdentifier: number;
 }
 
-export default class SuspenseBoundary<T> extends Component<SuspenseBoundaryProps, State> {
+export default class SuspenseBoundary extends Component<SuspenseBoundaryProps, State> {
 
     static propTypes = {
         is: PropTypes.elementType,
@@ -97,6 +98,18 @@ export default class SuspenseBoundary<T> extends Component<SuspenseBoundaryProps
         this.setState(updater);
     }
 
+    renderError(error: Error) {
+        const {renderError} = this.props;
+        const recover = () => {
+            if (error instanceof SuspenseError) {
+                this.expire(error.action, error.key);
+            }
+            this.setState({error: null});
+        };
+        return renderError(error instanceof SuspenseError ? error.actualError : error, recover);
+
+    }
+
     computeContextValue = (): SuspenseContext => {
         const {forceUpdateIdentifier} = this.state;
 
@@ -158,13 +171,13 @@ export default class SuspenseBoundary<T> extends Component<SuspenseBoundaryProps
     }
 
     render() {
-        const {children, pendingFallback, renderError} = this.props;
+        const {children, pendingFallback} = this.props;
         const {error} = this.state;
         const contextValue = this.computeContextValue();
         return (
             <Context.Provider value={contextValue}>
                 <Suspense fallback={pendingFallback}>
-                    {error ? renderError(error) : children}
+                    {error ? this.renderError(error) : children}
                 </Suspense>
             </Context.Provider>
         );

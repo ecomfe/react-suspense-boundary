@@ -9,6 +9,7 @@ import SelfLoading from '../SelfLoading';
 import ManualControl from '../ManualControl';
 import AsyncError from '../AsyncError';
 import RelatedSource from '../RelatedSource';
+import ErrorRecovery from '../ErrorRecovery';
 import Readme from '../Readme';
 import c from './index.less';
 
@@ -27,6 +28,7 @@ export default () => (
                         <Route path="/self-loading" component={SelfLoading} />
                         <Route path="/manual-control" component={ManualControl} />
                         <Route path="/async-error" component={AsyncError} />
+                        <Route path="/error-recovery" component={ErrorRecovery} />
                         <Route path="/source/:filename" component={RelatedSource} />
                         <Route path="/readme" component={Readme} />
                         <Redirect to="/simple" />

@@ -1,5 +1,6 @@
 import {createContext, useContext, useCallback} from 'react';
 import invariant from 'tiny-invariant';
+import SuspenseError from './SuspenseError';
 
 export type Fetch<I, O> = (args: I) => Promise<O>;
 
@@ -75,7 +76,7 @@ export const useResource = <I, O>(actionOrMockValue: Fetch<I, O> | O, params: I)
     }
 
     if (query.error) {
-        throw query.error;
+        throw new SuspenseError(actionOrMockValue, params, query.error);
     }
 
     return [
