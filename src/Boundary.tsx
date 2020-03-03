@@ -1,4 +1,4 @@
-import {Component, Suspense, ReactNode} from 'react';
+import React, {Component, Suspense, ReactNode} from 'react';
 import * as PropTypes from 'prop-types';
 import {Context, SuspenseContext, Fetch, Query} from './context';
 import SuspenseError from './SuspenseError';

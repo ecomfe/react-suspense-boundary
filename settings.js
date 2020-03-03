@@ -1,5 +1,3 @@
-// const {rules} = require('reskript');
-
 exports.featureMatrix = {
     stable: {},
     dev: {},
@@ -7,6 +5,7 @@ exports.featureMatrix = {
 
 exports.build = {
     appTitle: 'React Suspense Boundary',
+    extractCSS: false,
 };
 
 exports.devServer = {
@@ -24,10 +23,4 @@ exports.addition = ({usage}) => {
     }
 
     return {};
-};
-
-exports.rollup = {
-    namedDependencyExports: {
-        'prop-types': ['elementType', 'oneOf', 'node', 'func'],
-    },
 };
