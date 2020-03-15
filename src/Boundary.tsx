@@ -2,6 +2,7 @@ import React, {Component, Suspense, ReactNode} from 'react';
 import * as PropTypes from 'prop-types';
 import {Context, SuspenseContext, Fetch, Query} from './context';
 import SuspenseError from './SuspenseError';
+import {enterCache, leaveCache, Scope} from './CacheManager';
 import Cache, {CacheMode} from './Cache';
 
 const UNINITIALIZED = {};
@@ -11,11 +12,14 @@ type OmitUndefined<T> = T extends undefined ? never : T;
 export interface SuspenseBoundaryProps {
     cacheMode: CacheMode;
     pendingFallback: OmitUndefined<ReactNode>;
+    scope?: Scope;
     renderError(error: Error, recover: () => void): ReactNode;
 }
 
 interface State {
     error: Error | null;
+    scope: Scope;
+    givenScope?: Scope;
     // 这东西虽然在`state`里面，但它是完全不触发更新的，处理的时候要小心。
     // 放在`state`里面完全是为了`getDerivedStateFromProps`可以正常工作
     pending: Cache;
@@ -27,53 +31,57 @@ interface State {
 export default class SuspenseBoundary extends Component<SuspenseBoundaryProps, State> {
 
     static propTypes = {
-        is: PropTypes.elementType,
         cacheMode: PropTypes.oneOf(['function', 'key']),
         children: PropTypes.node.isRequired,
         pendingFallback: PropTypes.node,
+        scope: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
         renderError: PropTypes.func,
     };
 
     static defaultProps = {
-        is: 'div',
         cacheMode: 'key',
         pendingFallback: 'pending',
+        scope: undefined,
         renderError() {
             return 'error';
         },
     };
 
-    snapshot: any;
+    private snapshot: any;
 
-    pending: Cache;
+    private previousIdentifier: number;
 
-    previousIdentifier: number;
-
-    contextValue: SuspenseContext | null;
+    private contextValue: SuspenseContext | null;
 
     constructor(props: SuspenseBoundaryProps) {
         super(props);
+        const scope = props.scope || {};
+        const {pending, settled} = enterCache(scope, props.cacheMode);
         this.state = {
+            scope,
+            pending,
+            settled,
+            givenScope: props.scope,
             error: null,
-            pending: new Cache(props.cacheMode),
-            settled: new Cache(props.cacheMode),
             cacheMode: props.cacheMode,
             forceUpdateIdentifier: 0,
         };
-        this.pending = new Cache(props.cacheMode);
         this.snapshot = UNINITIALIZED;
         this.previousIdentifier = -1;
         this.contextValue = null;
     }
 
     static getDerivedStateFromProps(props: SuspenseBoundaryProps, state: State): Partial<State> | null {
-        const {cacheMode} = props;
-
-        if (state.cacheMode !== cacheMode) {
+        if (state.givenScope !== props.scope || state.cacheMode !== props.cacheMode) {
+            leaveCache(state.scope, state.cacheMode);
+            const scope = props.scope || {};
+            const {pending, settled} = enterCache(scope, props.cacheMode);
             return {
-                cacheMode: cacheMode,
-                pending: new Cache(cacheMode),
-                settled: new Cache(cacheMode),
+                scope,
+                pending,
+                settled,
+                givenScope: props.scope,
+                cacheMode: props.cacheMode,
             };
         }
 
@@ -82,6 +90,10 @@ export default class SuspenseBoundary extends Component<SuspenseBoundaryProps, S
 
     static getDerivedStateFromError(error: Error): Partial<State> {
         return {error};
+    }
+
+    componentWillUnmount() {
+        leaveCache(this.state.scope, this.state.cacheMode);
     }
 
     putSettled<I, O>(action: Fetch<I, O>, key: I, query: Query<O>): void {
