@@ -1,3 +1,5 @@
-export {default as Boundary} from './Boundary';
-export {useResource, useResourceWithMock, useSnapshot} from './context';
+export {default as Boundary, SuspenseBoundaryProps} from './Boundary';
+export {useResource, useResourceWithMock, useSnapshot, Fetch, Resource, ResourceController} from './context';
+export {Scope} from './CacheManager';
+export {CacheMode} from './Cache';
 export {withBoundary, WithBoundaryOptions} from './hocs';

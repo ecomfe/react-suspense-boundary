@@ -4,7 +4,7 @@ import SuspenseError from './SuspenseError';
 
 export type Fetch<I, O> = (args: I) => Promise<O>;
 
-interface ResourceController {
+export interface ResourceController {
     refresh(): void;
     expire(): void;
 }
