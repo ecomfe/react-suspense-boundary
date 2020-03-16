@@ -1102,6 +1102,16 @@
   resolved "https://registry.npm.taobao.org/@ecomfe/stylelint-config/download/@ecomfe/stylelint-config-1.0.0.tgz#5f553a02f7b2dfd46885ab43ae51e3017d2f194e"
   integrity sha1-X1U6Avey39RohatDrlHjAX0vGU4=
 
+"@huse/derived-state@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/@huse/derived-state/download/@huse/derived-state-1.0.0.tgz#0432a283bf1ece153a3563236f1ec8d25162acac"
+  integrity sha1-BDKig78ezhU6NWMjbx7I0lFirKw=
+
+"@huse/update@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/@huse/update/download/@huse/update-1.0.0.tgz#8e4bd23a43d377ba08c04f43b58b828c142d2741"
+  integrity sha1-jkvSOkPTd7oIwE9DtYuCjBQtJ0E=
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.0.0"
   resolved "https://registry.npm.taobao.org/@istanbuljs/load-nyc-config/download/@istanbuljs/load-nyc-config-1.0.0.tgz#10602de5570baea82f8afbfa2630b24e7a8cfe5b"

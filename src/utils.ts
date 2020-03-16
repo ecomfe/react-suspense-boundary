@@ -1,3 +1,5 @@
+import stringifyJSON from 'fast-json-stable-stringify';
+
 interface Any {
     [key: string]: any;
 }
@@ -10,4 +12,12 @@ export const omit = (input: Any, omitKey: string): Any => {
         }
     }
     return output;
+};
+
+export const stringifyKey = (key: any): string => {
+    if (key === undefined) {
+        return 'undefined';
+    }
+
+    return stringifyJSON(key);
 };
