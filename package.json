@@ -27,6 +27,8 @@
     }
   },
   "dependencies": {
+    "@huse/derived-state": "^1.0.0",
+    "@huse/update": "^1.0.0",
     "fast-json-stable-stringify": "^2.0.0",
     "prop-types": "^15.7.2",
     "tiny-invariant": "^1.1.0"

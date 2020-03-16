@@ -1,18 +1,14 @@
-import Cache, {CacheMode} from './Cache';
+import {CacheMode} from './Cache';
+import ResourceCache from './ResourceCache';
 
-export type Scope = string | {name?: string};
-
-interface ScopeCache {
-    pending: Cache;
-    settled: Cache;
-}
+export type Scope = string | {name?: string, displayName?: string};
 
 interface ReferenceCounter<T> {
     referenceCount: number;
     value: T;
 }
 
-const scopes = new Map<Scope, Map<CacheMode, ReferenceCounter<ScopeCache>>>();
+const scopes = new Map<Scope, Map<CacheMode, ReferenceCounter<ResourceCache>>>();
 
 const getOrCreate = <K, V>(map: Map<K, V>, key: K, initialize: () => V) => {
     if (!map.has(key)) {
@@ -21,21 +17,29 @@ const getOrCreate = <K, V>(map: Map<K, V>, key: K, initialize: () => V) => {
     return map.get(key) as V;
 };
 
-const newScopeCache = (cacheMode: CacheMode): ReferenceCounter<ScopeCache> => {
+const newScopeCache = (cacheMode: CacheMode): ReferenceCounter<ResourceCache> => {
     return {
         referenceCount: 0,
-        value: {
-            pending: new Cache(cacheMode),
-            settled: new Cache(cacheMode),
-        },
+        value: new ResourceCache(cacheMode),
     };
 };
 
-export const enterCache = (scope: Scope, cacheMode: CacheMode): ScopeCache => {
-    const inScope = getOrCreate(scopes, scope, () => new Map<CacheMode, ReferenceCounter<ScopeCache>>());
-    const inMode = getOrCreate(inScope, cacheMode, () => newScopeCache(cacheMode));
-    inMode.referenceCount++;
-    return inMode.value;
+const stringifyScope = (scope: Scope): string => {
+    if (typeof scope === 'string') {
+        return scope;
+    }
+
+    return (scope.displayName ?? scope.name ?? 'unknown');
+};
+
+export const enterCache = (scope: Scope, cacheMode: CacheMode): void => {
+    const reference = scopes.get(scope)?.get(cacheMode);
+
+    if (!reference) {
+        throw new Error(`Cache is not initialized for ${stringifyScope(scope)}/${cacheMode}`);
+    }
+
+    reference.referenceCount++;
 };
 
 export const leaveCache = (scope: Scope, cacheMode: CacheMode): void => {
@@ -45,19 +49,25 @@ export const leaveCache = (scope: Scope, cacheMode: CacheMode): void => {
         return;
     }
 
-    const inMode = inScope.get(cacheMode);
+    const reference = inScope.get(cacheMode);
 
-    if (!inMode) {
+    if (!reference) {
         return;
     }
 
-    inMode.referenceCount--;
+    reference.referenceCount--;
 
-    if (!inMode.referenceCount) {
+    if (!reference.referenceCount) {
         inScope.delete(cacheMode);
     }
 
-    if (!scopes.size) {
+    if (!inScope.size) {
         scopes.delete(scope);
     }
+};
+
+export const findCache = (scope: Scope, cacheMode: CacheMode): ResourceCache => {
+    const inScope = getOrCreate(scopes, scope, () => new Map<CacheMode, ReferenceCounter<ResourceCache>>());
+    const reference = getOrCreate(inScope, cacheMode, () => newScopeCache(cacheMode));
+    return reference.value;
 };

@@ -1,6 +1,10 @@
-import {createContext, useContext, useCallback} from 'react';
+import {createContext, useContext, useCallback, useEffect} from 'react';
 import invariant from 'tiny-invariant';
+import {useForceUpdate} from '@huse/update';
 import SuspenseError from './SuspenseError';
+import {CacheMode} from './Cache';
+import {Scope, findCache} from './CacheManager';
+import {stringifyKey} from './utils';
 
 export type Fetch<I, O> = (args: I) => Promise<O>;
 
@@ -18,11 +22,8 @@ export interface Query<T> {
 }
 
 export interface SuspenseContext {
-    find<I, O>(action: Fetch<I, O>, args: I): Query<O>;
-    fetch<I, O>(action: Fetch<I, O>, params: I, pending: Promise<void>): void;
-    receive<I, O>(action: Fetch<I, O>, params: I, data: O): void;
-    error<I, O>(action: Fetch<I, O>, params: I, reason: Error): void;
-    expire<I, O>(action: Fetch<I, O>, params: I): void;
+    scope: Scope;
+    cacheMode: CacheMode;
     saveSnapshot<T>(currentValue: T, initialValue: T): void;
     getSnapshot<T>(): T;
 }
@@ -39,36 +40,65 @@ const isMock = <I, O>(actionOrMockValue: Fetch<I, O> | O): actionOrMockValue is 
 /* eslint-disable react-hooks/rules-of-hooks */
 export const useResource = <I, O>(actionOrMockValue: Fetch<I, O> | O, params: I): Resource<O> => {
     const suspenseContext = useContext(Context);
-    invariant(suspenseContext, 'You should not use useResource outside a <Boundary>');
-    const {find, fetch, receive, error, expire} = suspenseContext as SuspenseContext;
+    const forceUpdate = useForceUpdate();
+    const keyString = stringifyKey(params);
+
+    if (!suspenseContext) {
+        throw new Error('You should not use useResource outside a <Boundary>');
+    }
+
+    const cache = findCache(suspenseContext.scope, suspenseContext.cacheMode);
+
+    useEffect(
+        () => {
+            const update = (action: any, key: any) => {
+                if (action === actionOrMockValue && stringifyKey(key) === keyString) {
+                    forceUpdate();
+                }
+            };
+            const unsubscribe = cache.subscribe(update);
+            return unsubscribe;
+        },
+        [actionOrMockValue, cache, forceUpdate, keyString]
+    );
 
     if (isMock(actionOrMockValue)) {
-        // 这里2个`useCallback`必须要，和后面的能对齐hook数量
-        const refresh = useCallback(noop, [actionOrMockValue, params, fetch, receive, error]);
-        const expireCache = useCallback(noop, [actionOrMockValue, expire, params]);
+        // These 2 `useCallback`s are required to align hooks order and count.
+        const refresh = useCallback(noop, [actionOrMockValue, params, cache]);
+        const expireCache = useCallback(noop, [actionOrMockValue, params, cache]);
         return [actionOrMockValue, {refresh, expire: expireCache}];
     }
 
-    const query = find(actionOrMockValue, params);
+    const query = cache.find(actionOrMockValue, params);
     const runAction = useCallback(
         () => {
             const pending = actionOrMockValue(params).then(
-                value => receive(actionOrMockValue, params, value),
-                reason => error(actionOrMockValue, params, reason)
+                value => cache.receive(actionOrMockValue, params, value),
+                reason => cache.error(actionOrMockValue, params, reason)
             );
-            fetch(actionOrMockValue, params, pending);
+            cache.fetch(actionOrMockValue, params, pending);
             return pending;
         },
-        [actionOrMockValue, params, fetch, receive, error]
+        [actionOrMockValue, params, cache]
     );
     const expireCache = useCallback(
-        () => expire(actionOrMockValue, params),
-        [actionOrMockValue, expire, params]
+        () => cache.expire(actionOrMockValue, params),
+        [actionOrMockValue, params, cache]
     );
 
     if (!query) {
         const pending = runAction();
         throw pending;
+    }
+
+    if (query.data) {
+        return [
+            query.data,
+            {
+                expire: expireCache,
+                refresh: runAction,
+            },
+        ];
     }
 
     if (query.pending) {
@@ -79,13 +109,7 @@ export const useResource = <I, O>(actionOrMockValue: Fetch<I, O> | O, params: I)
         throw new SuspenseError(actionOrMockValue, params, query.error);
     }
 
-    return [
-        query.data as O,
-        {
-            expire: expireCache,
-            refresh: runAction,
-        },
-    ];
+    throw new Error('Unexpected suspense state without data, pending and error');
 };
 /* eslint-enable react-hooks/rules-of-hooks */
 

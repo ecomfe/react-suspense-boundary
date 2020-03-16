@@ -1,16 +1,8 @@
-import stringifyJSON from 'fast-json-stable-stringify';
-import {omit} from './utils';
+import {omit, stringifyKey} from './utils';
 import {Query, Fetch} from './context';
 
 export type CacheMode = 'function' | 'key';
 
-const stringifyKey = (key: any): string => {
-    if (key === undefined) {
-        return 'undefined';
-    }
-
-    return stringifyJSON(key);
-};
 
 export default class Cache {
     cache = new WeakMap();
@@ -34,7 +26,7 @@ export default class Cache {
         }
     }
 
-    find<I, O>(action: Fetch<I, O>, key: I): Query<O> {
+    find<I, O>(action: Fetch<I, O>, key: I): Query<O> | undefined {
         const {cache, cacheMode} = this;
         const container = cache.get(action) || {};
         const keyString = stringifyKey(key);
