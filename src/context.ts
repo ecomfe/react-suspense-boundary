@@ -44,12 +44,14 @@ const noop = () => undefined;
 export const Context = createContext<SuspenseContext | null>(null);
 Context.displayName = 'SuspenseBoundaryContext';
 
+export const globalScope = {name: '#global'};
+
 const isMock = <I, O>(actionOrMockValue: Fetch<I, O> | O): actionOrMockValue is O => {
     return typeof actionOrMockValue !== 'function';
 };
 
 const isInChain = (contextChain: ContextEntry[], options?: UseResourceOptions): boolean => {
-    if (!options) {
+    if (!options || options.scope === globalScope) {
         return true;
     }
 
@@ -163,6 +165,23 @@ export function useResourceWithMock<I, O>(
         }
         throw ex;
     }
+}
+
+export function useGlobalResource<I, O>(
+    actionOrMockValue: Fetch<I, O> | O,
+    params: I,
+    cacheMode: CacheMode
+): Resource<O> {
+    return useResource(actionOrMockValue, params, {cacheMode, scope: globalScope});
+}
+
+export function useGlobalResourceWithMock<I, O>(
+    actionOrMockValue: Fetch<I, O> | O,
+    mockValue: O,
+    params: I,
+    cacheMode: CacheMode
+): Resource<O> {
+    return useResourceWithMock(actionOrMockValue, mockValue, params, {cacheMode, scope: globalScope});
 }
 
 export function useSnapshot<T>(currentValue: T, initialValue: T): T {
