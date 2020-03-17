@@ -1,4 +1,4 @@
-import React, {useMemo, Suspense, ReactNode, FC, useRef, useEffect} from 'react';
+import React, {useMemo, Suspense, ReactNode, FC, useRef, useEffect, useContext} from 'react';
 import * as PropTypes from 'prop-types';
 import {Context, SuspenseContext} from './context';
 import {enterCache, leaveCache, findCache, Scope} from './CacheManager';
@@ -28,9 +28,20 @@ const SuspenseBoundary: FC<SuspenseBoundaryProps> = props => {
         [cacheMode, scopeToUse]
     );
     const snapshot = useRef<any>(UNINITIALIZED);
+    const outerContext = useContext(Context);
+    const previousChain = outerContext?.contextChain;
+    const contextChain = useMemo(
+        () => {
+            const currentContextEntry = {cacheMode, scope: scopeToUse};
+            // In most cases we use the nearest boundary scope, so this should be prepended for a faster iteration
+            return previousChain ? [currentContextEntry, ...previousChain] : [currentContextEntry];
+        },
+        [cacheMode, scopeToUse, previousChain]
+    );
     const contextValue: SuspenseContext = useMemo(
         () => {
             return {
+                contextChain,
                 cacheMode,
                 scope: scopeToUse,
                 saveSnapshot<T>(currentValue: T, initialValue: T) {
@@ -47,7 +58,7 @@ const SuspenseBoundary: FC<SuspenseBoundaryProps> = props => {
                 },
             };
         },
-        [cacheMode, scopeToUse]
+        [cacheMode, contextChain, scopeToUse]
     );
     useEffect(
         () => {
