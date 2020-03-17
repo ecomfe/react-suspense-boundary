@@ -21,11 +21,22 @@ export interface Query<T> {
     data?: T;
 }
 
+interface ContextEntry {
+    scope: Scope;
+    cacheMode: CacheMode;
+}
+
 export interface SuspenseContext {
+    contextChain: ContextEntry[];
     scope: Scope;
     cacheMode: CacheMode;
     saveSnapshot<T>(currentValue: T, initialValue: T): void;
     getSnapshot<T>(): T;
+}
+
+export interface UseResourceOptions {
+    scope: Scope;
+    cacheMode: CacheMode;
 }
 
 const noop = () => undefined;
@@ -37,8 +48,20 @@ const isMock = <I, O>(actionOrMockValue: Fetch<I, O> | O): actionOrMockValue is 
     return typeof actionOrMockValue !== 'function';
 };
 
+const isInChain = (contextChain: ContextEntry[], options?: UseResourceOptions): boolean => {
+    if (!options) {
+        return true;
+    }
+
+    return contextChain.some(c => c.scope === options.scope && c.cacheMode === options.cacheMode);
+};
+
 /* eslint-disable react-hooks/rules-of-hooks */
-export const useResource = <I, O>(actionOrMockValue: Fetch<I, O> | O, params: I): Resource<O> => {
+export function useResource<I, O>(
+    actionOrMockValue: Fetch<I, O> | O,
+    params: I,
+    options?: UseResourceOptions
+): Resource<O> {
     const suspenseContext = useContext(Context);
     const forceUpdate = useForceUpdate();
     const keyString = stringifyKey(params);
@@ -47,7 +70,13 @@ export const useResource = <I, O>(actionOrMockValue: Fetch<I, O> | O, params: I)
         throw new Error('You should not use useResource outside a <Boundary>');
     }
 
-    const cache = findCache(suspenseContext.scope, suspenseContext.cacheMode);
+    if (!isInChain(suspenseContext.contextChain, options)) {
+        throw new Error('Unable to find an ancestor with given scope and cache mode');
+    }
+
+    const scope = options?.scope ?? suspenseContext.scope;
+    const cacheMode = options?.cacheMode ?? suspenseContext.cacheMode;
+    const cache = findCache(scope, cacheMode);
 
     useEffect(
         () => {
@@ -110,12 +139,17 @@ export const useResource = <I, O>(actionOrMockValue: Fetch<I, O> | O, params: I)
     }
 
     throw new Error('Unexpected suspense state without data, pending and error');
-};
+}
 /* eslint-enable react-hooks/rules-of-hooks */
 
-export const useResourceWithMock = <I, O>(actionOrMockValue: Fetch<I, O> | O, mockValue: O, params: I): Resource<O> => {
+export function useResourceWithMock<I, O>(
+    actionOrMockValue: Fetch<I, O> | O,
+    mockValue: O,
+    params: I,
+    options?: UseResourceOptions
+): Resource<O> {
     try {
-        return useResource(actionOrMockValue, params);
+        return useResource(actionOrMockValue, params, options);
     }
     catch (ex) {
         if (typeof ex.then === 'function') {
@@ -129,12 +163,12 @@ export const useResourceWithMock = <I, O>(actionOrMockValue: Fetch<I, O> | O, mo
         }
         throw ex;
     }
-};
+}
 
-export const useSnapshot = <T>(currentValue: T, initialValue: T): T => {
+export function useSnapshot<T>(currentValue: T, initialValue: T): T {
     const suspenseContext = useContext(Context);
     invariant(suspenseContext, 'You should not use useSnapshot outside a <Boundary>');
     const {saveSnapshot, getSnapshot} = suspenseContext as SuspenseContext;
     saveSnapshot(currentValue, initialValue);
     return getSnapshot();
-};
+}
