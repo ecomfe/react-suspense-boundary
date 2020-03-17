@@ -2,6 +2,8 @@ export {default as Boundary, SuspenseBoundaryProps} from './Boundary';
 export {
     useResource,
     useResourceWithMock,
+    useGlobalResource,
+    useGlobalResourceWithMock,
     useSnapshot,
     Fetch,
     Resource,
