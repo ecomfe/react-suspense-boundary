@@ -1,10 +1,13 @@
-import React, {Component, ReactNode} from 'react';
+import React, {Component, ReactNode, ErrorInfo} from 'react';
+import {Scope} from './CacheManager';
 import SuspenseError from './SuspenseError';
 import ResourceCache from './ResourceCache';
 
 interface ErrorBoundaryProps {
+    scope?: Scope;
     cache: ResourceCache;
     renderError(error: Error, recover: () => void): ReactNode;
+    componentDidCatch?(error: Error, info: ErrorInfo, scope?: Scope): void;
 }
 
 interface State {
@@ -21,8 +24,11 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, State> 
         return {error};
     }
 
-    componentDidCatch() {
-        // do nothing
+    componentDidCatch(error: Error, info: ErrorInfo) {
+        const {componentDidCatch, scope} = this.props;
+        if (componentDidCatch) {
+            componentDidCatch(error, info, scope);
+        }
     }
 
     render() {

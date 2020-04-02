@@ -57,18 +57,16 @@ A `Boundary` component receives props below:
 
 ```typescript
 interface BoundaryProps {
-    // What will this boundary component itself render, default to div
-    is: ReactElementType;
     // Defines how resource responses are cached in context, either per resource function or per invocation params
     cacheMode: 'function' | 'key';
     // When any of async progress is pending, boundary will render this element
     pendingFallback: Node;
     // When any error are received, will render this function
     renderError(error: Error): Node;
+    // When any error are catched, will call this function
+    componentDidCatch(error: Error, info: ErrorInfo, scope?: Scope): void;
 }
 ```
-
-Besides, `Boundary` accepts any props to DOM elements like `className` or `style`.
 
 ### useResource
 

@@ -1,4 +1,4 @@
-import React, {useMemo, Suspense, ReactNode, FC, useRef, useEffect, useContext} from 'react';
+import React, {useMemo, Suspense, ReactNode, FC, useRef, useEffect, useContext, ErrorInfo} from 'react';
 import * as PropTypes from 'prop-types';
 import {Context, SuspenseContext} from './context';
 import {enterCache, leaveCache, findCache, Scope} from './CacheManager';
@@ -15,10 +15,11 @@ export interface SuspenseBoundaryProps {
     scope?: Scope;
     children: ReactNode;
     renderError?(error: Error, recover: () => void): ReactNode;
+    componentDidCatch?(error: Error, info: ErrorInfo, scope?: Scope): void;
 }
 
 const SuspenseBoundary: FC<SuspenseBoundaryProps> = props => {
-    const {cacheMode = 'key', pendingFallback = 'pending', scope, renderError = () => 'error', children} = props;
+    const {cacheMode = 'key', pendingFallback = 'pending', scope, renderError = () => 'error', componentDidCatch, children} = props;
     const scopeToUse = useMemo(
         () => scope ?? {name: '#auto'},
         [scope]
@@ -69,7 +70,7 @@ const SuspenseBoundary: FC<SuspenseBoundaryProps> = props => {
     );
 
     return (
-        <ErrorBoundary cache={cache} renderError={renderError}>
+        <ErrorBoundary scope={scope} cache={cache} renderError={renderError} componentDidCatch={componentDidCatch}>
             <Context.Provider value={contextValue}>
                 <Suspense fallback={pendingFallback}>
                     {children}
