@@ -1,4 +1,4 @@
-import React, {useMemo, Suspense, ReactNode, FC, useRef, useEffect, useContext} from 'react';
+import React, {useMemo, Suspense, ReactNode, FC, useRef, useEffect, useContext, ErrorInfo} from 'react';
 import * as PropTypes from 'prop-types';
 import {Context, SuspenseContext} from './context';
 import {enterCache, leaveCache, findCache, Scope} from './CacheManager';
@@ -15,10 +15,11 @@ export interface SuspenseBoundaryProps {
     scope?: Scope;
     children: ReactNode;
     renderError?(error: Error, recover: () => void): ReactNode;
+    onErrorCaught?(error: Error, info: ErrorInfo): void;
 }
 
 const SuspenseBoundary: FC<SuspenseBoundaryProps> = props => {
-    const {cacheMode = 'key', pendingFallback = 'pending', scope, renderError = () => 'error', children} = props;
+    const {cacheMode = 'key', pendingFallback = 'pending', scope, renderError = () => 'error', onErrorCaught, children} = props;
     const scopeToUse = useMemo(
         () => scope ?? {name: '#auto'},
         [scope]
@@ -69,7 +70,7 @@ const SuspenseBoundary: FC<SuspenseBoundaryProps> = props => {
     );
 
     return (
-        <ErrorBoundary cache={cache} renderError={renderError}>
+        <ErrorBoundary cache={cache} renderError={renderError} onErrorCaught={onErrorCaught}>
             <Context.Provider value={contextValue}>
                 <Suspense fallback={pendingFallback}>
                     {children}
@@ -86,6 +87,7 @@ SuspenseBoundary.propTypes = {
     pendingFallback: PropTypes.node,
     scope: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     renderError: PropTypes.func,
+    onErrorCaught: PropTypes.func,
 };
 
 export default SuspenseBoundary;

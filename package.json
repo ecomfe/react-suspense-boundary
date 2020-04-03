@@ -11,6 +11,7 @@
   "sideEffects": false,
   "main": "cjs/index.js",
   "module": "es/index.js",
+  "types": "es/index.d.ts",
   "scripts": {
     "build": "rm -rf es cjs && tsc & tsc --module ESNext --outDir ./es",
     "build:demo": "skr build --clean --src=demo",
