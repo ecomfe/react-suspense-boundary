@@ -15,11 +15,11 @@ export interface SuspenseBoundaryProps {
     scope?: Scope;
     children: ReactNode;
     renderError?(error: Error, recover: () => void): ReactNode;
-    componentDidCatch?(error: Error, info: ErrorInfo, scope?: Scope): void;
+    onErrorCaught?(error: Error, info: ErrorInfo): void;
 }
 
 const SuspenseBoundary: FC<SuspenseBoundaryProps> = props => {
-    const {cacheMode = 'key', pendingFallback = 'pending', scope, renderError = () => 'error', componentDidCatch, children} = props;
+    const {cacheMode = 'key', pendingFallback = 'pending', scope, renderError = () => 'error', onErrorCaught, children} = props;
     const scopeToUse = useMemo(
         () => scope ?? {name: '#auto'},
         [scope]
@@ -70,7 +70,7 @@ const SuspenseBoundary: FC<SuspenseBoundaryProps> = props => {
     );
 
     return (
-        <ErrorBoundary scope={scope} cache={cache} renderError={renderError} componentDidCatch={componentDidCatch}>
+        <ErrorBoundary cache={cache} renderError={renderError} onErrorCaught={onErrorCaught}>
             <Context.Provider value={contextValue}>
                 <Suspense fallback={pendingFallback}>
                     {children}
@@ -87,6 +87,7 @@ SuspenseBoundary.propTypes = {
     pendingFallback: PropTypes.node,
     scope: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     renderError: PropTypes.func,
+    onErrorCaught: PropTypes.func,
 };
 
 export default SuspenseBoundary;
