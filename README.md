@@ -64,7 +64,7 @@ interface BoundaryProps {
     // When any error are received, will render this function
     renderError(error: Error): Node;
     // When any error are catched, will call this function
-    componentDidCatch(error: Error, info: ErrorInfo): void;
+    onErrorCaught(error: Error, info: ErrorInfo): void;
 }
 ```
 
