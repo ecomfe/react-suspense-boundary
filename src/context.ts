@@ -9,7 +9,7 @@ import {stringifyKey} from './utils';
 export type Fetch<I, O> = (args: I) => Promise<O>;
 
 export interface ResourceController {
-    refresh(): void;
+    refresh(): Promise<void>;
     expire(): void;
 }
 
@@ -40,6 +40,7 @@ export interface UseResourceOptions {
 }
 
 const noop = () => undefined;
+const noopAsync = () => Promise.resolve();
 
 export const Context = createContext<SuspenseContext | null>(null);
 Context.displayName = 'SuspenseBoundaryContext';
@@ -95,7 +96,7 @@ export function useResource<I, O>(
 
     if (isMock(actionOrMockValue)) {
         // These 2 `useCallback`s are required to align hooks order and count.
-        const refresh = useCallback(noop, [actionOrMockValue, params, cache]);
+        const refresh = useCallback(noopAsync, [actionOrMockValue, params, cache]);
         const expireCache = useCallback(noop, [actionOrMockValue, params, cache]);
         return [actionOrMockValue, {refresh, expire: expireCache}];
     }
@@ -159,7 +160,7 @@ export function useResourceWithMock<I, O>(
                 mockValue,
                 {
                     expire: noop,
-                    refresh: noop,
+                    refresh: noopAsync,
                 },
             ];
         }

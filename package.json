@@ -28,30 +28,30 @@
     }
   },
   "dependencies": {
-    "@huse/derived-state": "^1.0.0",
-    "@huse/update": "^1.0.0",
+    "@huse/derived-state": "^1.0.1",
+    "@huse/update": "^1.0.1",
     "fast-json-stable-stringify": "^2.0.0",
     "prop-types": "^15.7.2",
     "tiny-invariant": "^1.1.0"
   },
   "devDependencies": {
     "@types/fast-json-stable-stringify": "^2.0.0",
-    "@types/react": "^16.9.23",
-    "antd": "^4.0.2",
-    "echarts": "^4.4.0",
+    "@types/react": "^16.9.35",
+    "antd": "^4.3.1",
+    "echarts": "^4.8.0",
     "faker": "^4.1.0",
-    "husky": "^4.2.3",
-    "prism-themes": "^1.3.0",
-    "react": "^16.13.0",
-    "react-dom": "^16.13.0",
-    "react-icons": "^3.9.0",
+    "husky": "^4.2.5",
+    "prism-themes": "^1.4.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-icons": "^3.10.0",
     "react-loading": "^2.0.3",
     "react-markdown": "^4.2.2",
-    "react-refractor": "^1.0.1",
-    "react-router-dom": "^5.1.2",
-    "refractor": "^2.10.0",
-    "reskript": "^0.25.17",
-    "webpack": "^4.42.0"
+    "react-refractor": "^2.1.0",
+    "react-router-dom": "^5.2.0",
+    "refractor": "^3.0.0",
+    "reskript": "^0.26.1",
+    "webpack": "^4.43.0"
   },
   "peerDependencies": {
     "react": "^16.8.6"

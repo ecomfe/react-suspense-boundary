@@ -19,7 +19,14 @@ export interface SuspenseBoundaryProps {
 }
 
 const SuspenseBoundary: FC<SuspenseBoundaryProps> = props => {
-    const {cacheMode = 'key', pendingFallback = 'pending', scope, renderError = () => 'error', onErrorCaught, children} = props;
+    const {
+        cacheMode = 'key',
+        pendingFallback = 'pending',
+        scope,
+        renderError = () => 'error',
+        onErrorCaught,
+        children,
+    } = props;
     const scopeToUse = useMemo(
         () => scope ?? {name: '#auto'},
         [scope]
