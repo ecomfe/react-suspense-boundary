@@ -123,7 +123,7 @@ export function useResource<I, O>(
         throw pending;
     }
 
-    if (query.data) {
+    if (query.hasOwnProperty('data')) {
         return [
             query.data,
             {
