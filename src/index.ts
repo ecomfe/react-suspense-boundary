@@ -1,5 +1,6 @@
 export {default as Boundary, SuspenseBoundaryProps} from './Boundary';
 export {
+    useResourceAll,
     useResource,
     useResourceWithMock,
     useGlobalResource,
@@ -7,7 +8,9 @@ export {
     useSnapshot,
     Fetch,
     Resource,
+    ResourceInput,
     ResourceController,
+    ManualResourceController,
     UseResourceOptions,
 } from './context';
 export {Scope} from './CacheManager';
