@@ -1,4 +1,4 @@
-import {createContext, useContext, useCallback, useEffect} from 'react';
+import {createContext, useContext, useCallback, useEffect, useRef} from 'react';
 import invariant from 'tiny-invariant';
 import {useForceUpdate} from '@huse/update';
 import SuspenseError from './SuspenseError';
@@ -105,27 +105,29 @@ export function useResourceAll(
     const scope = options?.scope ?? suspenseContext.scope;
     const cacheMode = options?.cacheMode ?? suspenseContext.cacheMode;
     const cache = findCache(scope, cacheMode);
-
+    const inputsRef = useRef(inputs);
     useEffect(
         () => {
-            const subscribe = ([actionOrMockValue, key]) => {
-                const keyString = stringifyKey(key);
-                const update = (action: any, key: any) => {
-                    if (action === actionOrMockValue && stringifyKey(key) === keyString) {
-                        forceUpdate();
-                    }
-                };
-                const unsubscribe = cache.subscribe(update);
-                return unsubscribe;
-            };
-            const subscriptions = inputs.map(subscribe);
-            return () => subscriptions.forEach(s => s());
+            inputsRef.current = inputs;
         },
-        [inputs, cache, forceUpdate]
+        [inputs]
+    );
+    useEffect(
+        () => {
+            const update = (action: any, key: any) => {
+                const targetInput = inputsRef.current.find(([updatedAction]) => updatedAction === action);
+
+                if (targetInput && stringifyKey(key) === stringifyKey(targetInput[1])) {
+                    forceUpdate();
+                }
+            };
+            return cache.subscribe(update);
+        },
+        [cache, forceUpdate]
     );
     const refresh = useCallback(
         (action: any) => {
-            const targetInput = inputs.find(([fetch]) => fetch === action);
+            const targetInput = inputsRef.current.find(([fetch]) => fetch === action);
 
             if (targetInput) {
                 const [action, params] = targetInput;
@@ -137,18 +139,18 @@ export function useResourceAll(
                 return pending;
             }
         },
-        [cache, inputs]
+        [cache]
     );
     const expire = useCallback(
         (action: any) => {
-            const targetInput = inputs.find(([fetch]) => fetch === action);
+            const targetInput = inputsRef.current.find(([fetch]) => fetch === action);
 
             if (targetInput) {
                 const [action, params] = targetInput;
                 cache.expire(action, params);
             }
         },
-        [cache, inputs]
+        [cache]
     );
 
     const waits: Array<Promise<any>> = [];
