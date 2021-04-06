@@ -81,7 +81,7 @@ type Resource<T> = [
     }
 ];
 
-type useResource<TIn, TOut> = (action: (input: TIn) => TOut, params: TIn): Resource<T>;
+type useResource<I, O> = (action: (input: I) => O, params: I) => Resource<O>;
 ```
 
 Unlike other async hooks, `useResource` returns the result "immediately", there is no `pending` or `loading` state, no exception will throw.
@@ -113,3 +113,30 @@ const boundary = {
 };
 
 export default withBoundary(boundary)(Foo);
+```
+
+### Default configuration
+
+`BoundaryConfigProvider` provides default configurations to `pendingFallback`, `renderError` and `onErrorCaught` props.
+
+```javascript
+import {Spin} from 'antd';
+import {BoundaryConfigProvider} from 'react-suspense-boundary';
+
+const defaultPendingFallback = <Spin />;
+
+const defaultRenderError = error => (
+    <div>
+        {error.message}
+    </div>
+);
+
+const App = () => {
+    <BoundaryConfigProvider
+        pendingFallback={defaultPendingFallback}
+        renderError={defaultRenderError}
+    >
+        {/* All Boundary elements inside it receives default configurations */}
+    </BoundaryConfigProvider>
+}
+```

@@ -1,4 +1,5 @@
 export {default as Boundary, SuspenseBoundaryProps} from './Boundary';
+export {default as BoundaryConfigProvider, BoundaryConfig} from './ConfigProvider';
 export {
     useResourceAll,
     useResource,

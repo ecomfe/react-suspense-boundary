@@ -4,6 +4,7 @@ import {Context, SuspenseContext} from './context';
 import {enterCache, leaveCache, findCache, Scope} from './CacheManager';
 import {CacheMode} from './Cache';
 import ErrorBoundary from './ErrorBoundary';
+import {useConfigWithOverrides} from './ConfigProvider';
 
 const UNINITIALIZED = {};
 
@@ -19,14 +20,8 @@ export interface SuspenseBoundaryProps {
 }
 
 const SuspenseBoundary: FC<SuspenseBoundaryProps> = props => {
-    const {
-        cacheMode = 'key',
-        pendingFallback = 'pending',
-        scope,
-        renderError = () => 'error',
-        onErrorCaught,
-        children,
-    } = props;
+    const {cacheMode = 'key', scope, children} = props;
+    const {pendingFallback, renderError, onErrorCaught} = useConfigWithOverrides(props);
     const scopeToUse = useMemo(
         () => scope ?? {name: '#auto'},
         [scope]
