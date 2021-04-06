@@ -1,4 +1,4 @@
-import {createContext, useContext, useCallback, useEffect, useRef} from 'react';
+import {createContext, useContext, useCallback, useEffect} from 'react';
 import invariant from 'tiny-invariant';
 import {useForceUpdate} from '@huse/update';
 import SuspenseError from './SuspenseError';
@@ -47,11 +47,11 @@ Context.displayName = 'SuspenseBoundaryContext';
 
 export const globalScope = {name: '#global'};
 
-export const isMock = <I, O>(actionOrMockValue: Fetch<I, O> | O): actionOrMockValue is O => {
+const isMock = <I, O>(actionOrMockValue: Fetch<I, O> | O): actionOrMockValue is O => {
     return typeof actionOrMockValue !== 'function';
 };
 
-export const isInChain = (contextChain: ContextEntry[], options?: UseResourceOptions): boolean => {
+const isInChain = (contextChain: ContextEntry[], options?: UseResourceOptions): boolean => {
     if (!options || options.scope === globalScope) {
         return true;
     }
@@ -59,8 +59,15 @@ export const isInChain = (contextChain: ContextEntry[], options?: UseResourceOpt
     return contextChain.some(c => c.scope === options.scope && c.cacheMode === options.cacheMode);
 };
 
-export const useSuspenseContext = (options?: UseResourceOptions) => {
+/* eslint-disable react-hooks/rules-of-hooks */
+export function useResource<I, O>(
+    actionOrMockValue: Fetch<I, O> | O,
+    params: I,
+    options?: UseResourceOptions
+): Resource<O> {
     const suspenseContext = useContext(Context);
+    const forceUpdate = useForceUpdate();
+    const keyString = stringifyKey(params);
 
     if (!suspenseContext) {
         throw new Error('You should not use useResource outside a <Boundary>');
@@ -70,145 +77,73 @@ export const useSuspenseContext = (options?: UseResourceOptions) => {
         throw new Error('Unable to find an ancestor with given scope and cache mode');
     }
 
-    return suspenseContext;
-};
-
-export interface ManualResourceController {
-    refresh(fetch: any): Promise<void>;
-    expire(fetch: any): void;
-}
-
-export type ResourceInput<I, O> = [Fetch<I, O> | O, I];
-
-export function useResourceAll<I1, O1>(
-    inputs: [ResourceInput<I1, O1>],
-    options?: UseResourceOptions
-): [[O1], ManualResourceController];
-export function useResourceAll<I1, O1, I2, O2>(
-    inputs: [ResourceInput<I1, O1>, ResourceInput<I2, O2>],
-    options?: UseResourceOptions
-): [[O1, O2], ManualResourceController];
-export function useResourceAll<I1, O1, I2, O2, I3, O3>(
-    inputs: [ResourceInput<I1, O1>, ResourceInput<I2, O2>, ResourceInput<I3, O3>],
-    options?: UseResourceOptions
-): [[O1, O2, O3], ManualResourceController];
-export function useResourceAll<I1, O1, I2, O2, I3, O3, I4, O4>(
-    inputs: [ResourceInput<I1, O1>, ResourceInput<I2, O2>, ResourceInput<I3, O3>, ResourceInput<I4, O4>],
-    options?: UseResourceOptions
-): [[O1, O2, O3, O4], ManualResourceController];
-export function useResourceAll(
-    inputs: Array<ResourceInput<any, any>>,
-    options?: UseResourceOptions
-): [any[], ManualResourceController] {
-    const suspenseContext = useSuspenseContext();
-    const forceUpdate = useForceUpdate();
     const scope = options?.scope ?? suspenseContext.scope;
     const cacheMode = options?.cacheMode ?? suspenseContext.cacheMode;
     const cache = findCache(scope, cacheMode);
-    const inputsRef = useRef(inputs);
-    useEffect(
-        () => {
-            inputsRef.current = inputs;
-        },
-        [inputs]
-    );
+
     useEffect(
         () => {
             const update = (action: any, key: any) => {
-                const targetInput = inputsRef.current.find(([updatedAction]) => updatedAction === action);
-
-                if (targetInput && stringifyKey(key) === stringifyKey(targetInput[1])) {
+                if (action === actionOrMockValue && stringifyKey(key) === keyString) {
                     forceUpdate();
                 }
             };
-            return cache.subscribe(update);
+            const unsubscribe = cache.subscribe(update);
+            return unsubscribe;
         },
-        [cache, forceUpdate]
-    );
-    const refresh = useCallback(
-        (action: any) => {
-            const targetInput = inputsRef.current.find(([fetch]) => fetch === action);
-
-            if (targetInput) {
-                const [action, params] = targetInput;
-                const pending = action(params).then(
-                    (value: any) => cache.receive(action, params, value),
-                    (reason: any) => cache.error(action, params, reason)
-                );
-                cache.fetch(action, params, pending);
-                return pending;
-            }
-        },
-        [cache]
-    );
-    const expire = useCallback(
-        (action: any) => {
-            const targetInput = inputsRef.current.find(([fetch]) => fetch === action);
-
-            if (targetInput) {
-                const [action, params] = targetInput;
-                cache.expire(action, params);
-            }
-        },
-        [cache]
+        [actionOrMockValue, cache, forceUpdate, keyString]
     );
 
-    const waits: Array<Promise<any>> = [];
-    const values: any[] = [];
-    for (const [action, params] of inputs) {
-        if (isMock(action)) {
-            values.push(action);
-            break;
-        }
-
-        const query = cache.find(action, params);
-        if (!query) {
-            waits.push(refresh(action));
-        }
-        else if (query.data !== undefined) {
-            values.push(query.data);
-        }
-        else if (query.pending) {
-            waits.push(query.pending);
-        }
-        else if (query.error) {
-            throw new SuspenseError(action, params, query.error);
-        }
-        else {
-            throw new Error('Unexpected suspense state without data, pending and error');
-        }
+    if (isMock(actionOrMockValue)) {
+        // These 2 `useCallback`s are required to align hooks order and count.
+        const refresh = useCallback(noopAsync, [actionOrMockValue, params, cache]);
+        const expireCache = useCallback(noop, [actionOrMockValue, params, cache]);
+        return [actionOrMockValue, {refresh, expire: expireCache}];
     }
 
-    if (waits.length) {
-        throw Promise.all(waits);
+    const query = cache.find(actionOrMockValue, params);
+    const runAction = useCallback(
+        () => {
+            const pending = actionOrMockValue(params).then(
+                value => cache.receive(actionOrMockValue, params, value),
+                reason => cache.error(actionOrMockValue, params, reason)
+            );
+            cache.fetch(actionOrMockValue, params, pending);
+            return pending;
+        },
+        [actionOrMockValue, params, cache]
+    );
+    const expireCache = useCallback(
+        () => cache.expire(actionOrMockValue, params),
+        [actionOrMockValue, params, cache]
+    );
+
+    if (!query) {
+        const pending = runAction();
+        throw pending;
     }
 
-    return [values, {refresh, expire}];
-}
+    if (query.data !== undefined) {
+        return [
+            query.data,
+            {
+                expire: expireCache,
+                refresh: runAction,
+            },
+        ];
+    }
 
-/* eslint-disable react-hooks/rules-of-hooks */
-export function useResource<I, O>(
-    actionOrMockValue: Fetch<I, O> | O,
-    params: I,
-    options?: UseResourceOptions
-): Resource<O> {
-    const [[value], {refresh, expire}] = useResourceAll([[actionOrMockValue, params]], options);
-    const boundRefresh = useCallback(
-        () => refresh(actionOrMockValue),
-        [actionOrMockValue, refresh]
-    );
-    const boundExpire = useCallback(
-        () => expire(actionOrMockValue),
-        [actionOrMockValue, expire]
-    );
-    return [
-        value,
-        {
-            refresh: boundRefresh,
-            expire: boundExpire,
-        },
-    ];
+    if (query.pending) {
+        throw query.pending;
+    }
+
+    if (query.error) {
+        throw new SuspenseError(actionOrMockValue, params, query.error);
+    }
+
+    throw new Error('Unexpected suspense state without data, pending and error');
 }
+/* eslint-enable react-hooks/rules-of-hooks */
 
 export function useResourceWithMock<I, O>(
     actionOrMockValue: Fetch<I, O> | O,
