@@ -1,17 +1,24 @@
 {
-    "extends": "./node_modules/reskript/config/tsconfig.json",
     "compilerOptions": {
-        "jsx": "react",
+        "jsx": "react-jsx",
+        "target": "ES2018",
+        "module": "ESNext",
+        "noEmit": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node",
         "allowJs": false,
-        "target": "ES2015",
-        "module": "CommonJS",
         "strict": true,
-        "noImplicitAny": false,
+        "noImplicitAny": true,
         "sourceMap": true,
-        "rootDir": "./src",
-        "outDir": "./cjs",
-        "noEmit": false,
-        "declaration": true
+        "skipLibCheck": true,
+        "baseUrl": ".",
+        "declaration": true,
+        "paths": {
+            "react-suspense-boundary": ["./src"]
+        }
     },
-    "include": ["src"]
+    "include": [
+        "src",
+        "demo"
+    ]
 }

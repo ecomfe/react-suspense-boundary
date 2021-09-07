@@ -1,95 +1,39 @@
-import React, {useMemo, Suspense, ReactNode, FC, useRef, useEffect, useContext, ErrorInfo} from 'react';
-import * as PropTypes from 'prop-types';
-import {Context, SuspenseContext} from './context';
-import {enterCache, leaveCache, findCache, Scope} from './CacheManager';
-import {CacheMode} from './Cache';
+import {Suspense, ReactNode, ComponentProps} from 'react';
+import CacheProvider, {useExpireCache} from './CacheProvider';
+import {useBoundaryConfig, BoundaryConfig} from './ConfigProvider';
 import ErrorBoundary from './ErrorBoundary';
-import {useConfigWithOverrides} from './ConfigProvider';
 
-const UNINITIALIZED = {};
+type ErrorBoundaryProps = ComponentProps<typeof ErrorBoundary>;
 
-type OmitUndefined<T> = T extends undefined ? never : T;
+function CacheConnectedErrorBoundary(props: Omit<ErrorBoundaryProps, 'onExpireResource'>) {
+    const expire = useExpireCache();
 
-export interface SuspenseBoundaryProps {
-    cacheMode?: CacheMode;
-    pendingFallback?: OmitUndefined<ReactNode>;
-    scope?: Scope;
-    children: ReactNode;
-    renderError?(error: Error, recover: () => void): ReactNode;
-    onErrorCaught?(error: Error, info: ErrorInfo): void;
+    return <ErrorBoundary onExpireResource={expire} {...props} />;
 }
 
-const SuspenseBoundary: FC<SuspenseBoundaryProps> = props => {
-    const {cacheMode = 'key', scope, children} = props;
-    const {pendingFallback, renderError, onErrorCaught} = useConfigWithOverrides(props);
-    const scopeToUse = useMemo(
-        () => scope ?? {name: '#auto'},
-        [scope]
-    );
-    const cache = useMemo(
-        () => findCache(scopeToUse, cacheMode),
-        [cacheMode, scopeToUse]
-    );
-    const snapshot = useRef<any>(UNINITIALIZED);
-    const outerContext = useContext(Context);
-    const previousChain = outerContext?.contextChain;
-    const contextChain = useMemo(
-        () => {
-            const currentContextEntry = {cacheMode, scope: scopeToUse};
-            // In most cases we use the nearest boundary scope, so this should be prepended for a faster iteration
-            return previousChain ? [currentContextEntry, ...previousChain] : [currentContextEntry];
-        },
-        [cacheMode, scopeToUse, previousChain]
-    );
-    const contextValue: SuspenseContext = useMemo(
-        () => {
-            return {
-                contextChain,
-                cacheMode,
-                scope: scopeToUse,
-                saveSnapshot<T>(currentValue: T, initialValue: T) {
-                    if (snapshot.current === UNINITIALIZED) {
-                        snapshot.current = initialValue;
-                    }
+export interface SuspenseBoundaryProps {
+    pendingFallback?: BoundaryConfig['pendingFallback'];
+    renderError?: BoundaryConfig['renderError'];
+    children: ReactNode;
+    onErrorCaught?: BoundaryConfig['onErrorCaught'];
+}
 
-                    if (currentValue) {
-                        snapshot.current = currentValue;
-                    }
-                },
-                getSnapshot() {
-                    return snapshot.current === UNINITIALIZED ? undefined : snapshot.current;
-                },
-            };
-        },
-        [cacheMode, contextChain, scopeToUse]
-    );
-    useEffect(
-        () => {
-            enterCache(scopeToUse, cacheMode);
-            return () => leaveCache(scopeToUse, cacheMode);
-        },
-        [cacheMode, scopeToUse]
-    );
+export default function SuspenseBoundary(props: SuspenseBoundaryProps) {
+    const defaultConfig = useBoundaryConfig();
+    const {
+        pendingFallback = defaultConfig.pendingFallback,
+        renderError = defaultConfig.renderError,
+        children,
+        onErrorCaught = defaultConfig.onErrorCaught,
+    } = props;
 
     return (
-        <ErrorBoundary cache={cache} renderError={renderError} onErrorCaught={onErrorCaught}>
-            <Context.Provider value={contextValue}>
+        <CacheProvider>
+            <CacheConnectedErrorBoundary renderError={renderError} onErrorCaught={onErrorCaught}>
                 <Suspense fallback={pendingFallback}>
                     {children}
                 </Suspense>
-            </Context.Provider>
-        </ErrorBoundary>
+            </CacheConnectedErrorBoundary>
+        </CacheProvider>
     );
-};
-
-/* eslint-disable react/require-default-props */
-SuspenseBoundary.propTypes = {
-    cacheMode: PropTypes.oneOf(['function', 'key']),
-    children: PropTypes.node.isRequired,
-    pendingFallback: PropTypes.node,
-    scope: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-    renderError: PropTypes.func,
-    onErrorCaught: PropTypes.func,
-};
-
-export default SuspenseBoundary;
+}

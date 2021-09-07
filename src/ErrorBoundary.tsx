@@ -1,11 +1,16 @@
-import React, {Component, ReactNode, ErrorInfo} from 'react';
+import {Component, ReactNode, ErrorInfo} from 'react';
+import {CacheController} from 'react-suspense-boundary';
 import SuspenseError from './SuspenseError';
-import ResourceCache from './ResourceCache';
+
+export interface RenderErrorOptions {
+    recover: () => void;
+}
 
 interface ErrorBoundaryProps {
-    cache: ResourceCache;
-    renderError(error: Error, recover: () => void): ReactNode;
-    onErrorCaught?(error: Error, info: ErrorInfo): void;
+    renderError: (error: Error, options: RenderErrorOptions) => ReactNode;
+    children: ReactNode;
+    onExpireResource?: CacheController;
+    onErrorCaught?: (error: Error, info: ErrorInfo) => void;
 }
 
 interface State {
@@ -13,7 +18,6 @@ interface State {
 }
 
 export default class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
-
     readonly state: State = {
         error: null,
     };
@@ -25,7 +29,7 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, State> 
     componentDidCatch(error: Error, info: ErrorInfo) {
         const {onErrorCaught} = this.props;
         if (onErrorCaught) {
-            onErrorCaught(error instanceof SuspenseError ? error.actualError : error, info);
+            onErrorCaught(error instanceof SuspenseError ? error.cause : error, info);
         }
     }
 
@@ -37,13 +41,13 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, State> 
     }
 
     private renderError(error: Error) {
-        const {cache, renderError} = this.props;
+        const {renderError, onExpireResource} = this.props;
         const recover = () => {
             if (error instanceof SuspenseError) {
-                cache.expire(error.action, error.key);
+                onExpireResource?.(error.action, error.params);
             }
             this.setState({error: null});
         };
-        return renderError(error instanceof SuspenseError ? error.actualError : error, recover);
+        return renderError(error instanceof SuspenseError ? error.cause : error, {recover});
     }
 }
