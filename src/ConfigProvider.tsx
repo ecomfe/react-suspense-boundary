@@ -1,15 +1,19 @@
-import React, {createContext, ReactNode, useContext, useMemo} from 'react';
-import {SuspenseBoundaryProps} from './Boundary';
+import {ComponentProps, createContext, ReactElement, ReactNode, useContext, useMemo} from 'react';
+import ErrorBoundary from './ErrorBoundary';
+
+type ErrorBoundaryProps = ComponentProps<typeof ErrorBoundary>;
 
 export interface BoundaryConfig {
-    pendingFallback?: SuspenseBoundaryProps['pendingFallback'];
-    renderError?: SuspenseBoundaryProps['renderError'];
-    onErrorCaught?: SuspenseBoundaryProps['onErrorCaught'];
+    pendingFallback: ReactElement | null;
+    renderError: ErrorBoundaryProps['renderError'];
+    onErrorCaught?: ErrorBoundaryProps['onErrorCaught'];
 }
 
 const DEFAULT_CONFIG = {
-    pendingFallback: 'pending',
-    renderError: () => 'error',
+    pendingFallback: null,
+    renderError: () => {
+        throw new Error('No renderError configured in ConfigProvider or passed by Boundary props');
+    },
 };
 const Context = createContext<BoundaryConfig>(DEFAULT_CONFIG);
 Context.displayName = 'BoundaryConfigContext';
@@ -33,15 +37,4 @@ const BoundaryConfigProvider = ({pendingFallback, renderError, onErrorCaught, ch
 
 export default BoundaryConfigProvider;
 
-type OmitUndefined<T> = T extends undefined ? never : T;
-
-interface ControlledBoundaryConfig {
-    pendingFallback: OmitUndefined<SuspenseBoundaryProps['pendingFallback']>;
-    renderError: OmitUndefined<SuspenseBoundaryProps['renderError']>;
-    onErrorCaught?: SuspenseBoundaryProps['onErrorCaught'];
-}
-
-export const useConfigWithOverrides = (overrides: BoundaryConfig): ControlledBoundaryConfig => {
-    const defaults = useContext(Context);
-    return {...DEFAULT_CONFIG, ...defaults, ...overrides};
-};
+export const useBoundaryConfig = () => useContext(Context);
