@@ -18,7 +18,7 @@ export interface SuspenseBoundaryProps {
     onErrorCaught?: BoundaryConfig['onErrorCaught'];
 }
 
-export default function SuspenseBoundary(props: SuspenseBoundaryProps) {
+function SuspenseBoundaryNoCache(props: SuspenseBoundaryProps) {
     const defaultConfig = useBoundaryConfig();
     const {
         pendingFallback = defaultConfig.pendingFallback,
@@ -28,12 +28,22 @@ export default function SuspenseBoundary(props: SuspenseBoundaryProps) {
     } = props;
 
     return (
+        <CacheConnectedErrorBoundary renderError={renderError} onErrorCaught={onErrorCaught}>
+            <Suspense fallback={pendingFallback}>
+                {children}
+            </Suspense>
+        </CacheConnectedErrorBoundary>
+    );
+}
+
+function SuspenseBoundary(props: SuspenseBoundaryProps) {
+    return (
         <CacheProvider>
-            <CacheConnectedErrorBoundary renderError={renderError} onErrorCaught={onErrorCaught}>
-                <Suspense fallback={pendingFallback}>
-                    {children}
-                </Suspense>
-            </CacheConnectedErrorBoundary>
+            <SuspenseBoundaryNoCache {...props} />
         </CacheProvider>
     );
 }
+
+SuspenseBoundary.NoCache = SuspenseBoundaryNoCache;
+
+export default SuspenseBoundary;
