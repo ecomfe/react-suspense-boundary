@@ -2,6 +2,8 @@
 
 A boundary component working with suspense and error
 
+Version 2.x is an experimental implement using [use-subscription](https://www.npmjs.com/package/use-subscription) to simulate future official suspense data fetching.
+
 ## Install
 
 ```shell
@@ -56,13 +58,15 @@ export default () => (
 A `Boundary` component receives props below:
 
 ```typescript
+interface RenderErrorOptions {
+    recover: () => void;
+}
+
 interface BoundaryProps {
-    // Defines how resource responses are cached in context, either per resource function or per invocation params
-    cacheMode: 'function' | 'key';
     // When any of async progress is pending, boundary will render this element
-    pendingFallback: Node;
+    pendingFallback: ReactNode;
     // When any error are received, will render this function
-    renderError(error: Error): Node;
+    renderError(error: Error, options: RenderErrorOptions): ReactNode;
     // When any error are catched, will call this function
     onErrorCaught(error: Error, info: ErrorInfo): void;
 }
@@ -72,7 +76,7 @@ interface BoundaryProps {
 
 The `useResource` hook is used to inspect an async function within a boundary:
 
-```typescript
+```ts
 type Resource<T> = [
     T,
     {
@@ -81,7 +85,8 @@ type Resource<T> = [
     }
 ];
 
-type useResource<I, O> = (action: (input: I) => O, params: I) => Resource<O>;
+function useResource<I, O>(action: (input: I) => Promise<O>, params: I): Resource<O>;
+function useConstantResource<O>(action: () => Promise<O>): Resource<O>;
 ```
 
 Unlike other async hooks, `useResource` returns the result "immediately", there is no `pending` or `loading` state, no exception will throw.
@@ -90,30 +95,6 @@ Other than the result itself, the second object of `useResource`'s returned arra
 
 - `expire` will immediately remove the cached result, causing the upper `Boundary` to be pending until `action` is resolved the next time.
 - `refresh` is a function to run `action` again without removing previously cached result.
-
-### withBoundary
-
-To wrap a single component with `Boundary`, unlike directly create `<Boundary>` element, this HOC has 2 different options:
-
-- `pendingFallback` can be a function which receives props from wrapped component.
-- `is` has a default value of `Fragment` since a single component doesn't require an extra wrap element.
-
-```javascript
-import {withBoundary, useResource} from 'react-suspense-boundary';
-
-const Foo = props => {
-    const [value] = useResource(fetchValue, props.name);
-    return <span>value is: ${value}</span>;
-};
-
-const boundary = {
-    createPendingFallback(props) {
-        return <span>loading {props.name}</span>;
-    }
-};
-
-export default withBoundary(boundary)(Foo);
-```
 
 ### Default configuration
 
@@ -139,4 +120,25 @@ const App = () => {
         {/* All Boundary elements inside it receives default configurations */}
     </BoundaryConfigProvider>
 }
+```
+
+### Preload
+
+Preload is much like resource fetching, they can be "immediately" fired within a render function:
+
+```ts
+function usePreloadResource<I, O>(action: (input: I) => Promise<O>, params: I): void;
+function usePreloadConstantResource<O>(action: () => Promise<O>): void;
+```
+
+Preload fires resource fetching process but not abort current render.
+
+You can also get a `preload` function using `usePreloadCallback` hook to preload any resources in effect or event handlers:
+
+```tsx
+const preload = usePreloadCallback();
+
+<Button onMouseEnter={() => preload(fetchList, {pageIndex: currentPageIndex + 1})}>
+    Next Page
+</Button>
 ```
