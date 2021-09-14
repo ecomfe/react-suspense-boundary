@@ -12,6 +12,7 @@ export interface Pending<O> {
 export interface HasValue<O> {
     kind: 'hasValue';
     data: O;
+    pending: boolean;
 }
 
 export interface HasError {
@@ -29,6 +30,7 @@ export interface CacheController {
 }
 
 export interface ResourceController {
+    pending: boolean;
     expire: () => void;
     refresh: () => void;
 }

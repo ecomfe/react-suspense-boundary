@@ -16,12 +16,13 @@ function UserList({controllable, crashable}: Props) {
     const [pageIndex, setPageIndex] = useState(1);
     const [requestCrash, fallCrash] = useReducer(v => !v, false);
     useConstantResource(requestCrash ? api.mustCrash : noCrash);
-    const [list, {expire, refresh}] = useResource(api.list, {pageIndex});
+    const [list, {pending, expire, refresh}] = useResource(api.list, {pageIndex});
 
     return (
         <Content
             crashable={crashable}
             controllable={controllable}
+            refreshLoading={pending}
             dataSource={list.results}
             pageIndex={list.pageIndex}
             pageSize={list.pageSize}
@@ -35,11 +36,11 @@ function UserList({controllable, crashable}: Props) {
 }
 
 const SKELETON_CONTENT_PROPS = {
-    defaultLoading: true,
     dataSource: [],
     pageIndex: 1,
     totalCount: 10,
     pageSize: 10,
+    loading: true,
     onCrash: noop,
     onExpire: noop,
     onRefresh: noop,
