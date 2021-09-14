@@ -30,7 +30,8 @@ const Header = styled.header`
 interface Props {
     controllable?: boolean;
     crashable?: boolean;
-    defaultLoading?: boolean;
+    loading?: boolean;
+    refreshLoading?: boolean;
     dataSource: User[];
     pageIndex: number;
     totalCount: number;
@@ -45,7 +46,8 @@ export function Content(props: Props) {
     const {
         controllable = false,
         crashable = false,
-        defaultLoading = false,
+        loading = false,
+        refreshLoading = false,
         dataSource,
         pageIndex,
         totalCount,
@@ -75,14 +77,14 @@ export function Content(props: Props) {
                     <Button disabled={!controllable} onClick={onExpire}>
                         Expire Cache
                     </Button>
-                    <Button disabled={!controllable} onClick={onRefresh}>
+                    <Button disabled={!controllable} loading={refreshLoading} onClick={onRefresh}>
                         Refresh List
                     </Button>
                 </Space>
             </Header>
             <Table
                 rowKey="id"
-                loading={defaultLoading}
+                loading={loading}
                 columns={columns}
                 dataSource={dataSource}
                 pagination={pagination}
