@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-beta.3](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2021-09-14)
+
+
+### Features
+
+* provide pending indicator on refreshing a resource ([3c4d99a](https://github.com/ecomfe/react-suspense-boundary/commit/3c4d99ac6081cdd7704eb9783ca898f1f41e4f14))
+
 ## [2.0.0-beta.2](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2021-09-12)
 
 
