@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-beta.4](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2021-09-18)
+
+
+### Bug Fixes
+
+* fix type of usePreloadResource ([04da00d](https://github.com/ecomfe/react-suspense-boundary/commit/04da00dbe2dd24fd20b3fa4dfb171530dcfacb33))
+
 ## [2.0.0-beta.3](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2021-09-14)
 
 
