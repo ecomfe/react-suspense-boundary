@@ -144,7 +144,7 @@ export function useConstantResource<O>(api: ConstantAsync<O>) {
     return useResourceInternal(api);
 }
 
-export function usePreloadResource<I, O>(api: Async<I, O>, params: O) {
+export function usePreloadResource<I, O>(api: Async<I, O>, params: I): void {
     const {cache} = useContext(Context);
     const key = stringifyKey(params);
 
@@ -153,7 +153,7 @@ export function usePreloadResource<I, O>(api: Async<I, O>, params: O) {
     }
 }
 
-export function usePreloadConstantResource<O>(api: ConstantAsync<O>) {
+export function usePreloadConstantResource<O>(api: ConstantAsync<O>): void {
     const {cache} = useContext(Context);
     const key = stringifyKey(undefined);
 
