@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-beta.5](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2021-09-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove CacheProvider from Boundary
+
+### Bug Fixes
+
+* remove CacheProvider from Boundary ([c4e6bcf](https://github.com/ecomfe/react-suspense-boundary/commit/c4e6bcf08ed5fff937ecf00ef9378572e1a40051))
+
 ## [2.0.0-beta.4](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2021-09-18)
 
 
