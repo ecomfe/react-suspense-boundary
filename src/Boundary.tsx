@@ -1,5 +1,5 @@
 import {Suspense, ReactNode, ComponentProps} from 'react';
-import CacheProvider, {useExpireCache} from './CacheProvider';
+import {useExpireCache} from './CacheProvider';
 import {useBoundaryConfig, BoundaryConfig} from './ConfigProvider';
 import ErrorBoundary from './ErrorBoundary';
 
@@ -18,7 +18,7 @@ export interface SuspenseBoundaryProps {
     onErrorCaught?: BoundaryConfig['onErrorCaught'];
 }
 
-function SuspenseBoundaryNoCache(props: SuspenseBoundaryProps) {
+export default function SuspenseBoundary(props: SuspenseBoundaryProps) {
     const defaultConfig = useBoundaryConfig();
     const {
         pendingFallback = defaultConfig.pendingFallback,
@@ -35,15 +35,3 @@ function SuspenseBoundaryNoCache(props: SuspenseBoundaryProps) {
         </CacheConnectedErrorBoundary>
     );
 }
-
-function SuspenseBoundary(props: SuspenseBoundaryProps) {
-    return (
-        <CacheProvider>
-            <SuspenseBoundaryNoCache {...props} />
-        </CacheProvider>
-    );
-}
-
-SuspenseBoundary.NoCache = SuspenseBoundaryNoCache;
-
-export default SuspenseBoundary;
