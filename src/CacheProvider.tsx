@@ -1,5 +1,5 @@
 import {useRef, useMemo, useCallback, useContext, createContext, ReactNode} from 'react';
-import {useSubscription} from 'use-subscription';
+import {useSyncExternalStore} from 'use-sync-external-store';
 import {Async, ResourceController, CacheController, LooseApi, ConstantAsync, ResourceState} from './interface';
 import {ObservableCache} from './ObservableCache';
 import SuspenseError from './SuspenseError';
@@ -92,16 +92,10 @@ function useResourceInternal<O>(api: LooseApi<O>, params?: unknown): [O, Resourc
         () => stringifyKey(params),
         [params]
     );
-    const subscription = useMemo(
-        () => {
-            return {
-                getCurrentValue: () => cache.get(api, key),
-                subscribe: (callback: () => void) => cache.observe(api, key, callback),
-            };
-        },
-        [api, cache, key]
+    const state = useSyncExternalStore(
+        callback => cache.observe(api, key, callback),
+        () => cache.get(api, key)
     );
-    const state = useSubscription(subscription);
     const expireCache = useExpireCache();
     const refreshCache = useRefreshCache();
     const expire = useCallback(

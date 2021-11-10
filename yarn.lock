@@ -2610,10 +2610,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/use-subscription@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@types/use-subscription@npm:1.0.0"
-  checksum: 47fff868682692ecda7110bd04ba4c5b1324854c0bcccc765606a42d4bd9be475207413c8829a883b98e7edd801100df53876da0ff89ac21a8f964e440636ef2
+"@types/use-sync-external-store@npm:^0.0.3":
+  version: 0.0.3
+  resolution: "@types/use-sync-external-store@npm:0.0.3"
+  checksum: 161ddb8eec5dbe7279ac971531217e9af6b99f7783213566d2b502e2e2378ea19cf5e5ea4595039d730aa79d3d35c6567d48599f69773a02ffcff1776ec2a44e
   languageName: node
   linkType: hard
 
@@ -10891,7 +10891,7 @@ __metadata:
     "@types/react": ^17.0.20
     "@types/react-dom": ^17.0.9
     "@types/react-router-dom": ^5.1.8
-    "@types/use-subscription": ^1.0.0
+    "@types/use-sync-external-store": ^0.0.3
     antd: ^4.16.13
     core-js: ^3.17.2
     echarts: ^5.2.0
@@ -10913,10 +10913,10 @@ __metadata:
     standard-version: ^9.3.1
     stylelint: ^13.13.1
     typescript: ^4.4.2
-    use-subscription: ^1.5.1
+    use-sync-external-store: ^0.0.0-experimental-45898dacb2-20210828
     webpack: ^5.52.0
   peerDependencies:
-    react: "*"
+    react: ">= 17"
   languageName: unknown
   linkType: soft
 
@@ -13115,14 +13115,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-subscription@npm:^1.5.1":
-  version: 1.5.1
-  resolution: "use-subscription@npm:1.5.1"
-  dependencies:
-    object-assign: ^4.1.1
+"use-sync-external-store@npm:^0.0.0-experimental-45898dacb2-20210828":
+  version: 0.0.0-experimental-fd5e01c2e-20210913
+  resolution: "use-sync-external-store@npm:0.0.0-experimental-fd5e01c2e-20210913"
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0
-  checksum: 96e64977a573244fd11350a3141b2cf57fb72dd9dd902f387c8a0a565d0a948bc81588bd7378c6ef6defc0d1119f37f73aac4a7a287c8443abd444bd4e7bbea8
+    react: 0.0.0-experimental-fd5e01c2e-20210913
+  checksum: 20af069ef0d7dca3deabe2c8ec700f8e0ef9cac2675564ba3ca3f102c73168746d0fcd02cfabd0211b10053dab9ff410504a6787170fa5ab8b91ffc4154a947f
   languageName: node
   linkType: hard
 
