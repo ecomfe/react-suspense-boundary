@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-beta.6](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2021-11-10)
+
 ## [2.0.0-beta.5](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2021-09-27)
 
 
