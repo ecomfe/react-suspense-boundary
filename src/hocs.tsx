@@ -13,8 +13,12 @@ export function withBoundary(options: WithBoundaryOptions = {}) {
     return function withBoundaryIn<P>(ComponentIn: ComponentType<P>): FC<P> {
         const ComponentOut: FC<P> = props => {
             const pendingFallback = typeof pendingFactory === 'function' ? pendingFactory(props) : pendingFactory;
+            const passProps = pendingFallback === undefined
+                ? boundaryProps
+                : {pendingFallback, ...boundaryProps};
+
             return (
-                <Boundary pendingFallback={pendingFallback} {...boundaryProps}>
+                <Boundary {...passProps}>
                     <ComponentIn {...props} />
                 </Boundary>
             );

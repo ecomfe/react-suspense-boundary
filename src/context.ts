@@ -188,7 +188,7 @@ export function useGlobalResourceWithMock<I, O>(
 export function useSnapshot<T>(currentValue: T, initialValue: T): T {
     const suspenseContext = useContext(Context);
     invariant(suspenseContext, 'You should not use useSnapshot outside a <Boundary>');
-    const {saveSnapshot, getSnapshot} = suspenseContext as SuspenseContext;
+    const {saveSnapshot, getSnapshot} = suspenseContext;
     saveSnapshot(currentValue, initialValue);
     return getSnapshot();
 }
