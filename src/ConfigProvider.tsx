@@ -12,7 +12,7 @@ export interface BoundaryConfig {
 const DEFAULT_CONFIG = {
     pendingFallback: null,
     renderError: () => {
-        throw new Error('No renderError configured in ConfigProvider or passed by Boundary props');
+        throw new Error('No renderError configured in BoundaryConfigProvider or passed by Boundary props');
     },
 };
 const Context = createContext<BoundaryConfig>(DEFAULT_CONFIG);

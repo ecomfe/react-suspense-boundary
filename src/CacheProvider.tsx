@@ -1,5 +1,5 @@
 import {useRef, useMemo, useCallback, useContext, createContext, ReactNode} from 'react';
-import {useSyncExternalStore} from 'use-sync-external-store';
+import {useSyncExternalStore} from 'use-sync-external-store/shim';
 import {Async, ResourceController, CacheController, LooseApi, ConstantAsync, ResourceState} from './interface';
 import {ObservableCache} from './ObservableCache';
 import SuspenseError from './SuspenseError';
