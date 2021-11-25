@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-beta.7](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2021-11-25)
+
+
+### Bug Fixes
+
+* cache should return promise ([9fb22d5](https://github.com/ecomfe/react-suspense-boundary/commit/9fb22d5f4cae5da466e002eb7bd5f9ba64196f83))
+
 ## [2.0.0-beta.6](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2021-11-10)
 
 ## [2.0.0-beta.5](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2021-09-27)
