@@ -62,6 +62,8 @@ const fetchToCache = (cache: ObservableCache, api: LooseApi, params: unknown, op
             }
         }
     }
+
+    return promise;
 };
 
 export function useExpireCache(): CacheController {
