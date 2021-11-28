@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-beta.9](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.0-beta.8...v2.0.0-beta.9) (2021-11-28)
+
+
+### Bug Fixes
+
+* use beta version of use-sync-external-store ([b1326fa](https://github.com/ecomfe/react-suspense-boundary/commit/b1326faae5454be80a1579613b6f581ee584d02c))
+
 ## [2.0.0-beta.8](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.0-beta.7...v2.0.0-beta.8) (2021-11-25)
 
 
