@@ -25,13 +25,13 @@ npm start
 ### Basic
 
 ```jsx
-import {Boundary, useResource} from 'react-suspense-boundary';
+import {Boundary, CacheProvider, useResource} from 'react-suspense-boundary';
 
 // Create or import an async function
 const fetchInfo = ({id}) => fetch(`/info/${id}`).then(response => response.json());
 
 // Implement your presentational component
-const Info = ({id}) => {
+function Info({id}) {
     // Call `useResource` to fetch, note the return value is an array
     const [info] = useResource(fetchInfo, {id});
 
@@ -43,17 +43,42 @@ const Info = ({id}) => {
     );
 };
 
-// Simply wrap your component in `Boundary`
-export default () => (
-    <Boundary>
-        <Info />
-    </Boundary>
+// Data is stored inside `CacheProvider`, suspending state is controlled with `Boundary`
+export default function App() => (
+    <CacheProvider>
+        <Boundary>
+            <Info />
+        </Boundary>
+    </CacheProvider>
 );
 ```
 
+### CacheProvider
+
+`CacheProvider` is by its name a cache context where we store all resources loaded by its children.
+
+The simpliest way to use `CacheProvider` is to provider an application level top cache:
+
+```tsx
+import {render} from 'react-dom';
+import {CacheProvider} from 'react-suspense-boundary';
+import {App} from './components/App';
+
+render(
+    <CacheProvider>
+        <App />
+    </CacheProvider>,
+    document.getElementById('root')
+);
+```
+
+For some more complex applications, you may want to restrict data caching in a smaller scope, e.g. route level, and expire cached responses on unmount, you can put `CacheProvider` anywhere you want to make a shared cache.
+
 ### Boundary
 
-`Boundary` components by its name defines a boundary in your view, within a boundary all async resource fetchings and errors are collected to form a loading or error indicator.
+`Boundary` components defines a boundary in your view, within a boundary all async resource fetchings and errors are collected to form a loading or error indicator.
+
+Usually we would have mulitple `Boundary` inside a `CacheProvider`, that is, users see different sections loading individually, but all resources are shared.
 
 A `Boundary` component receives props below:
 
