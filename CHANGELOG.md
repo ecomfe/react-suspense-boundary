@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.0-beta.9...v2.0.0) (2021-12-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* publish as pure ESM package
+
+* publish as pure ESM package ([b42d3ed](https://github.com/ecomfe/react-suspense-boundary/commit/b42d3edb7b8fc886fb9abc7550fea4d87ccdf5b4))
+
 ## [2.0.0-beta.9](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.0-beta.8...v2.0.0-beta.9) (2021-11-28)
 
 
