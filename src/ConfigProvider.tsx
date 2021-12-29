@@ -1,5 +1,5 @@
 import {ComponentProps, createContext, ReactElement, ReactNode, useContext, useMemo} from 'react';
-import ErrorBoundary from './ErrorBoundary';
+import ErrorBoundary from './ErrorBoundary.js';
 
 type ErrorBoundaryProps = ComponentProps<typeof ErrorBoundary>;
 

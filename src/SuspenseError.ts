@@ -1,4 +1,4 @@
-import {Async} from './interface';
+import {Async} from './interface.js';
 
 export default class SuspenseError extends Error {
     readonly action: Async<unknown, unknown>;

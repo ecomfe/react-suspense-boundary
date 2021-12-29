@@ -1,7 +1,7 @@
 import {Suspense, ReactNode, ComponentProps} from 'react';
-import {useExpireCache} from './CacheProvider';
-import {useBoundaryConfig, BoundaryConfig} from './ConfigProvider';
-import ErrorBoundary from './ErrorBoundary';
+import {useExpireCache} from './CacheProvider.js';
+import {useBoundaryConfig, BoundaryConfig} from './ConfigProvider.js';
+import ErrorBoundary from './ErrorBoundary.js';
 
 type ErrorBoundaryProps = ComponentProps<typeof ErrorBoundary>;
 

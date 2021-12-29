@@ -8,63 +8,73 @@
     "dist"
   ],
   "sideEffects": false,
-  "main": "./dist/index.js",
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "build:demo": "skr build --clean --src-dir=demo",
     "lint": "skr lint src demo --strict",
     "lint-staged": "npm run lint -- --staged --fix --auto-stage",
-    "test": "skr test",
+    "test": "vitest run",
     "prepublishOnly": "npm run build",
     "start": "skr dev --src-dir=demo",
-    "release": "standard-version --prerelease beta",
-    "deploy": "npm publish --tag=next"
+    "release": "standard-version",
+    "deploy": "npm publish"
   },
   "dependencies": {
-    "@emotion/css": "^11.5.0",
     "fast-json-stable-stringify": "^2.1.0",
-    "use-sync-external-store": "^1.0.0-beta-0cc724c77-20211125"
+    "use-sync-external-store": "^1.0.0-rc.0"
   },
   "devDependencies": {
-    "@emotion/react": "^11.7.0",
+    "@emotion/css": "^11.7.1",
+    "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
-    "@reskript/cli": "2.3.0",
-    "@reskript/cli-dev": "2.3.0",
-    "@reskript/cli-lint": "2.3.0",
-    "@reskript/cli-test": "2.3.0",
-    "@reskript/config-lint": "2.3.0",
+    "@reskript/cli": "2.5.1",
+    "@reskript/cli-dev": "2.5.1",
+    "@reskript/cli-lint": "2.5.1",
+    "@reskript/config-lint": "2.5.1",
     "@testing-library/react-hooks": "^7.0.2",
     "@types/faker": "^5.5.9",
     "@types/jest": "^27.0.3",
     "@types/prop-types": "^15.7.4",
-    "@types/react": "^17.0.37",
+    "@types/react": "patch:@types/react@^17.0.38#./.yarn/patches/@types-react-npm-17.0.38-e8f2055f5b",
     "@types/react-dom": "^17.0.11",
     "@types/react-router-dom": "^5.3.2",
     "@types/use-sync-external-store": "^0.0.3",
-    "antd": "^4.17.2",
-    "core-js": "^3.19.1",
+    "@vitejs/plugin-react": "^1.1.3",
+    "antd": "^4.18.0",
+    "c8": "^7.10.0",
+    "core-js": "^3.20.1",
     "echarts": "^5.2.2",
     "eslint": "^7.32.0",
     "faker": "^5.5.3",
-    "history": "^5.1.0",
+    "history": "^5.2.0",
     "husky": "^7.0.4",
+    "jsdom": "^19.0.0",
     "prism-themes": "^1.9.0",
-    "prop-types": "^15.7.2",
+    "prop-types": "^15.8.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
     "react-loading": "^2.0.3",
-    "react-markdown": "^7.1.0",
+    "react-markdown": "^7.1.1",
     "react-refractor": "^2.1.5",
-    "react-router-dom": "^6.0.2",
+    "react-router-dom": "^6.2.1",
     "refractor": "^4.3.0",
     "standard-version": "^9.3.2",
     "stylelint": "^13.13.1",
-    "typescript": "^4.5.2",
-    "webpack": "^5.64.4"
+    "typescript": "4.6.0-dev.20211227",
+    "vite": "^2.7.9",
+    "vitest": "^0.0.118",
+    "webpack": "^5.65.0"
   },
   "peerDependencies": {
     "react": ">= 17"
   },
-  "packageManager": "yarn@3.1.0"
+  "packageManager": "yarn@3.1.0",
+  "resolutions": {
+    "@types/react@17.0.38": "patch:@types/react@npm:17.0.38#.yarn/patches/@types-react-npm-17.0.38-e8f2055f5b"
+  }
 }

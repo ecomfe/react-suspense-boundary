@@ -1,3 +1,4 @@
+import {test, expect} from 'vitest';
 import {ReactNode} from 'react';
 import {renderHook} from '@testing-library/react-hooks';
 import CacheProvider, {useConstantResource} from '../CacheProvider';

@@ -1,9 +1,9 @@
 import {useRef, useMemo, useCallback, useContext, createContext, ReactNode} from 'react';
 import {useSyncExternalStore} from 'use-sync-external-store/shim';
-import {Async, ResourceController, CacheController, LooseApi, ConstantAsync, ResourceState} from './interface';
-import {ObservableCache} from './ObservableCache';
-import SuspenseError from './SuspenseError';
-import {stringifyKey} from './utils';
+import {Async, ResourceController, CacheController, LooseApi, ConstantAsync, ResourceState} from './interface.js';
+import {ObservableCache} from './ObservableCache.js';
+import SuspenseError from './SuspenseError.js';
+import {stringifyKey} from './utils.js';
 
 interface ContextValue {
     cache: ObservableCache;
