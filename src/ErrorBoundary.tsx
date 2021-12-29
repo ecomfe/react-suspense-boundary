@@ -1,6 +1,6 @@
 import {Component, ReactNode, ErrorInfo} from 'react';
-import {CacheController} from 'react-suspense-boundary';
-import SuspenseError from './SuspenseError';
+import {CacheController} from './interface.js';
+import SuspenseError from './SuspenseError.js';
 
 export interface RenderErrorOptions {
     recover: () => void;

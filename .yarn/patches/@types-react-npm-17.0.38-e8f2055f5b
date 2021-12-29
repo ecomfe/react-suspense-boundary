@@ -1,0 +1,28 @@
+diff --git a/package.json b/package.json
+index 5d64178cf645b6785311b883fd21365d23ef89c9..9d3b18d1899be898e5b184783ce5cb27b6cf772e 100755
+--- a/package.json
++++ b/package.json
+@@ -146,6 +146,23 @@
+         "@types/scheduler": "*",
+         "csstype": "^3.0.2"
+     },
++    "exports": {
++        ".": {
++            "types": "./index.d.ts"
++        },
++        "./jsx-runtime": {
++            "types": "./jsx-runtime.d.ts"
++        },
++        "./jsx-dev-runtime": {
++            "types": "./jsx-dev-runtime.d.ts"
++        },
++        "./next": {
++            "types": "./next.d.ts"
++        },
++        "./experimental": {
++            "types": "./experimental.d.ts"
++        }
++    },
+     "typesPublisherContentHash": "1015b508f5c5489fee390a311f2806cc4363420c3aa9b2e66226ce23c4b0c9d9",
+     "typeScriptVersion": "3.8"
+ }

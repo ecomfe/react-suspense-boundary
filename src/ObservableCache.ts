@@ -1,4 +1,4 @@
-import {ResourceState, LooseApi, Family} from './interface';
+import {ResourceState, LooseApi, Family} from './interface.js';
 
 interface Listener {
     api: LooseApi;

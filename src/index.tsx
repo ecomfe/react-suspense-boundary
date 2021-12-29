@@ -1,5 +1,5 @@
 import {ComponentType} from 'react';
-import {default as Boundary, SuspenseBoundaryProps} from './Boundary';
+import {default as Boundary, SuspenseBoundaryProps} from './Boundary.js';
 
 export {Boundary};
 export {
@@ -11,13 +11,13 @@ export {
     usePreloadResourceCallback,
     useExpireCache,
     useRefreshCache,
-} from './CacheProvider';
-export {default as ErrorBoundary} from './ErrorBoundary';
-export {default as BoundaryConfigProvider} from './ConfigProvider';
+} from './CacheProvider.js';
+export {default as ErrorBoundary} from './ErrorBoundary.js';
+export {default as BoundaryConfigProvider} from './ConfigProvider.js';
 
 export type {SuspenseBoundaryProps};
-export type {RenderErrorOptions} from './ErrorBoundary';
-export type {CacheController, ResourceController} from './interface';
+export type {RenderErrorOptions} from './ErrorBoundary.js';
+export type {CacheController, ResourceController} from './interface.js';
 
 type Factory<T, P> = T | ((props: P) => T);
 
