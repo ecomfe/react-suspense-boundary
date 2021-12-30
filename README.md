@@ -2,7 +2,7 @@
 
 A boundary component working with suspense and error
 
-Version 2.x is an experimental implement using [use-subscription](https://www.npmjs.com/package/use-subscription) to simulate future official suspense data fetching.
+Version 2.x is implemented on [use-sync-external-store](https://www.npmjs.com/package/use-sync-external-store) to align with future official suspense data fetching.
 
 ## Install
 
