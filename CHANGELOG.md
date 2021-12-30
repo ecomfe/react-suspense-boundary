@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.2](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.1...v2.0.2) (2021-12-30)
+
+
+### Bug Fixes
+
+* add types field to package.json ([70c8336](https://github.com/ecomfe/react-suspense-boundary/commit/70c8336ef490f13d8a60d9e6465d7494fecb43dd))
+
 ### [2.0.1](https://github.com/ecomfe/react-suspense-boundary/compare/v1.2.3...v2.0.1) (2021-12-30)
 
 
