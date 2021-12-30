@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/ecomfe/react-suspense-boundary/compare/v1.2.3...v2.0.1) (2021-12-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* publish as pure ESM package
+* remove CacheProvider from Boundary
+* version 2.0
+
+### Features
+
+* add a boundary with no cache provider ([2442b26](https://github.com/ecomfe/react-suspense-boundary/commit/2442b26654a87edbad1021b8c53ca070cdaa0712))
+* provide pending indicator on refreshing a resource ([7c2e030](https://github.com/ecomfe/react-suspense-boundary/commit/7c2e03051051a6ea0bf86a9219da27181f70e22d))
+* version 2.0 ([9a20230](https://github.com/ecomfe/react-suspense-boundary/commit/9a20230c796a9bee28db06bb15d852c2840221ec))
+
+
+### Bug Fixes
+
+* cache should return promise ([fd58125](https://github.com/ecomfe/react-suspense-boundary/commit/fd58125524c8b8d5037aeefbad39a00c82a77eeb))
+* export types in package.json ([ad0ce9c](https://github.com/ecomfe/react-suspense-boundary/commit/ad0ce9ce3b3e019b7a300d0772db2609ed16481c))
+* fix type of usePreloadResource ([43dd666](https://github.com/ecomfe/react-suspense-boundary/commit/43dd6663a7e89a684210a726c2b8f53d97a0edef))
+* remove CacheProvider from Boundary ([f9fd486](https://github.com/ecomfe/react-suspense-boundary/commit/f9fd486914a0752fcf5d48d91aa7fb992861c83f))
+* use beta version of use-sync-external-store ([f457e58](https://github.com/ecomfe/react-suspense-boundary/commit/f457e584a4f9823420bed5ad4607b3b734958b48))
+* use use-sync-external-store/shim ([18fe4c7](https://github.com/ecomfe/react-suspense-boundary/commit/18fe4c755177e276666f2a3c7789ecc1f79476a2))
+
+
+* publish as pure ESM package ([bcc0e22](https://github.com/ecomfe/react-suspense-boundary/commit/bcc0e223ee5bb2e3d7656d48f05a140bdee42f24))
+
 ## [2.0.0](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.0-beta.9...v2.0.0) (2021-12-29)
 
 
