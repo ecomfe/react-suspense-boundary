@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.3](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.2...v2.0.3) (2021-12-30)
+
+
+### Bug Fixes
+
+* rollback to non-ESM ([e322ff9](https://github.com/ecomfe/react-suspense-boundary/commit/e322ff925c5c3c113863f7dbed503b1d23b23c67))
+
 ### [2.0.2](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.1...v2.0.2) (2021-12-30)
 
 
