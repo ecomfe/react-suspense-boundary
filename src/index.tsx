@@ -1,4 +1,4 @@
-import {ComponentType} from 'react';
+import {ComponentProps, ComponentType, ComponentRef, forwardRef} from 'react';
 import {default as Boundary, SuspenseBoundaryProps} from './Boundary.js';
 
 export {Boundary};
@@ -29,16 +29,18 @@ export function withBoundary(options: WithBoundaryOptions = {}) {
     const {pendingFallback: pendingFactory, ...boundaryProps} = options;
 
     return function withBoundaryIn<P>(ComponentIn: ComponentType<P>): ComponentType<P> {
-        function ComponentOut(props: P) {
-            const pendingFallback = typeof pendingFactory === 'function' ? pendingFactory(props) : pendingFactory;
+        const ComponentOut = forwardRef<ComponentRef<typeof ComponentIn>, ComponentProps<typeof ComponentIn>>(
+            function ComponentOut(props, ref) {
+                const pendingFallback = typeof pendingFactory === 'function' ? pendingFactory(props) : pendingFactory;
 
-            return (
-                <Boundary pendingFallback={pendingFallback} {...boundaryProps}>
-                    <ComponentIn {...props} />
-                </Boundary>
-            );
-        }
+                return (
+                    <Boundary pendingFallback={pendingFallback} {...boundaryProps}>
+                        <ComponentIn ref={ref} {...props} />
+                    </Boundary>
+                );
+            }
+        );
         ComponentOut.displayName = `withBoundary(${ComponentIn.displayName || ComponentIn.name || 'Unknown'})`;
-        return ComponentOut;
+        return ComponentOut as unknown as typeof ComponentIn;
     };
 }
