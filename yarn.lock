@@ -2819,17 +2819,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@patch:@types/react@^17.0.38#./.yarn/patches/@types-react-npm-17.0.38-e8f2055f5b::locator=react-suspense-boundary%40workspace%3A.":
-  version: 17.0.38
-  resolution: "@types/react@patch:@types/react@npm%3A17.0.38#./.yarn/patches/@types-react-npm-17.0.38-e8f2055f5b::version=17.0.38&hash=44ed90&locator=react-suspense-boundary%40workspace%3A."
-  dependencies:
-    "@types/prop-types": "*"
-    "@types/scheduler": "*"
-    csstype: ^3.0.2
-  checksum: 06380b4d1201a040f8478269350ffb7f2fc7edd20a05f97e0fb1a92a65eb7f50b4ff0260e6dd2072366f1b194fd978d3c7f9e35d41d285ed29ced924023f30c8
-  languageName: node
-  linkType: hard
-
 "@types/resolve@npm:1.17.1":
   version: 1.17.1
   resolution: "@types/resolve@npm:1.17.1"
@@ -12200,7 +12189,7 @@ __metadata:
     "@types/faker": ^5.5.9
     "@types/jest": ^27.0.3
     "@types/prop-types": ^15.7.4
-    "@types/react": "patch:@types/react@^17.0.38#./.yarn/patches/@types-react-npm-17.0.38-e8f2055f5b"
+    "@types/react": ^17.0.38
     "@types/react-dom": ^17.0.11
     "@types/react-router-dom": ^5.3.2
     "@types/use-sync-external-store": ^0.0.3
