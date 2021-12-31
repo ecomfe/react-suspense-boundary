@@ -1,6 +1,6 @@
 {
   "name": "react-suspense-boundary",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "repository": "git@github.com:ecomfe/react-suspense-boundary.git",
   "license": "MIT",
   "author": "otakustay <otakustay@gmail.com>",

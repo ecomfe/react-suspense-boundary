@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.3...v2.1.0) (2021-12-31)
+
+
+### Features
+
+* forward ref for withBoundary ([#17](https://github.com/ecomfe/react-suspense-boundary/issues/17)) ([50c7d01](https://github.com/ecomfe/react-suspense-boundary/commit/50c7d0121686c81df25d6c193b53ab0eab3b3821))
+* make refresh controller awaitable ([29e69f5](https://github.com/ecomfe/react-suspense-boundary/commit/29e69f5a02add1de5811ff84cb9594d5275839fe))
+
 ### [2.0.3](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.2...v2.0.3) (2021-12-30)
 
 
