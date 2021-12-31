@@ -1,6 +1,14 @@
 import {useRef, useMemo, useCallback, useContext, createContext, ReactNode} from 'react';
 import {useSyncExternalStore} from 'use-sync-external-store/shim';
-import {Async, ResourceController, CacheController, LooseApi, ConstantAsync, ResourceState} from './interface.js';
+import {
+    Async,
+    ResourceController,
+    CacheController,
+    AwaitableCacheController,
+    LooseApi,
+    ConstantAsync,
+    ResourceState,
+} from './interface.js';
 import {ObservableCache} from './ObservableCache.js';
 import SuspenseError from './SuspenseError.js';
 import {stringifyKey} from './utils.js';
@@ -32,21 +40,28 @@ interface FetchToCacheOptions {
     workingType: 'init' | 'set' | 'refresh' | 'none';
 }
 
-const isWorkInProgress = (state: ResourceState<unknown> | undefined): boolean => {
-    return !!state && (state.kind === 'pending' || (state.kind === 'hasValue' && state.pending));
+const getWorkInProgress = (state: ResourceState<unknown> | undefined): Promise<unknown> | null => {
+    switch (state?.kind) {
+        case 'pending':
+        case 'hasValuePending':
+            return state.promise;
+        default:
+            return null;
+    }
 };
 
 const fetchToCache = (cache: ObservableCache, api: LooseApi, params: unknown, options: FetchToCacheOptions) => {
     const {computedKey, workingType} = options;
     const key = computedKey ?? stringifyKey(params);
     const current = cache.get(api, key);
+    const workingInProgress = getWorkInProgress(current);
 
-    if (isWorkInProgress(current)) {
-        return;
+    if (workingInProgress) {
+        return workingInProgress;
     }
 
     const promise = api(params).then(
-        (data: any) => cache.set(api, key, {data, kind: 'hasValue', pending: false}),
+        (data: any) => cache.set(api, key, {data, kind: 'hasValue'}),
         (error: any) => cache.set(api, key, {error, kind: 'hasError'})
     );
     switch (workingType) {
@@ -57,8 +72,8 @@ const fetchToCache = (cache: ObservableCache, api: LooseApi, params: unknown, op
             cache.set(api, key, {promise, kind: 'pending'});
             break;
         case 'refresh': {
-            if (current && current.kind === 'hasValue') {
-                cache.set(api, key, {...current, pending: true});
+            if (current && (current.kind === 'hasValue' || current.kind === 'hasValuePending')) {
+                cache.set(api, key, {promise, data: current.data, kind: 'hasValuePending'});
             }
         }
     }
@@ -77,15 +92,15 @@ export function useExpireCache(): CacheController {
     return expire as CacheController;
 }
 
-export function useRefreshCache(): CacheController {
+export function useRefreshCache(): AwaitableCacheController {
     const {cache} = useContext(Context);
     const refresh = useCallback(
-        (api: LooseApi, params: unknown) => {
-            fetchToCache(cache, api, params, {workingType: 'refresh'});
+        async (api: LooseApi, params: unknown) => {
+            await fetchToCache(cache, api, params, {workingType: 'refresh'});
         },
         [cache]
     );
-    return refresh as CacheController;
+    return refresh as AwaitableCacheController;
 }
 
 function useResourceInternal<O>(api: LooseApi<O>, params?: unknown): [O, ResourceController] {
@@ -124,7 +139,9 @@ function useResourceInternal<O>(api: LooseApi<O>, params?: unknown): [O, Resourc
         case 'pending':
             throw state.promise;
         case 'hasValue':
-            return [state.data as O, {expire, refresh, pending: state.pending}];
+            return [state.data as O, {expire, refresh, pending: false}];
+        case 'hasValuePending':
+            return [state.data as O, {expire, refresh, pending: true}];
         case 'hasError':
             throw new SuspenseError(api, params, state.error);
         default:

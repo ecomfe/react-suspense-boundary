@@ -9,10 +9,15 @@ export interface Pending<O> {
     promise: Promise<O>;
 }
 
+export interface HasValuePending<O> {
+    kind: 'hasValuePending';
+    data: O;
+    promise: Promise<O>;
+}
+
 export interface HasValue<O> {
     kind: 'hasValue';
     data: O;
-    pending: boolean;
 }
 
 export interface HasError {
@@ -20,7 +25,7 @@ export interface HasError {
     error: Error;
 }
 
-export type ResourceState<O> = Pending<O> | HasValue<O> | HasError;
+export type ResourceState<O> = Pending<O> | HasValuePending<O> | HasValue<O> | HasError;
 
 export type Family<O> = Map<string, ResourceState<O>>;
 
@@ -29,8 +34,13 @@ export interface CacheController {
     <O>(api: ConstantAsync<O>): void;
 }
 
+export interface AwaitableCacheController {
+    <I, O>(api: Async<I, O>, params: I): Promise<void>;
+    <O>(api: ConstantAsync<O>): Promise<void>;
+}
+
 export interface ResourceController {
     pending: boolean;
     expire: () => void;
-    refresh: () => void;
+    refresh: () => Promise<void>;
 }
