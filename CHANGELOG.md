@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/ecomfe/react-suspense-boundary/compare/v2.1.0...v2.2.0) (2022-04-01)
+
+
+### Features
+
+* allow user to create custom cache context ([#18](https://github.com/ecomfe/react-suspense-boundary/issues/18)) ([2a4e56f](https://github.com/ecomfe/react-suspense-boundary/commit/2a4e56f7b027b041b799248a1334516e2a688158))
+
 ## [2.1.0](https://github.com/ecomfe/react-suspense-boundary/compare/v2.0.3...v2.1.0) (2021-12-31)
 
 
