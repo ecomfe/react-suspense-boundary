@@ -1,7 +1,9 @@
 import {test, expect} from 'vitest';
 import {ReactNode} from 'react';
 import {renderHook} from '@testing-library/react-hooks';
-import CacheProvider, {useConstantResource} from '../CacheProvider';
+import {createCacheProvider} from '../cache';
+
+const {CacheProvider, useConstantResource} = createCacheProvider({contextDisplayName: 'CacheContext'});
 
 interface ProviderProps {
     children?: ReactNode;

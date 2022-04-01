@@ -167,3 +167,56 @@ const preload = usePreloadCallback();
     Next Page
 </Button>
 ```
+
+## Create Your Own Cache
+
+`react-suspense-boundary`'s built-in `CacheProvider` references a single context type, that is, you are unable to access multiple caches in a single component:
+
+```tsx
+<CacheProvider>
+    <div>
+        <CacheProvider>
+            <MyResource />
+        </CacheProvider>
+    </div>
+</CacheProvider>
+```
+
+By default, there is no way to a make `MyResource` to load one resource into the outer `CacheProvider` and another into the inner `CacheProvider`.
+
+To solve this issue, we provide a `create()` function to create a custom set of providers and hooks, with a different context type so that you can use them simultaneously:
+
+```tsx
+import {CacheProvider, create, useConstantResource} from 'react-suspense-boundary';
+
+const {
+    CacheProvider: GlobalCacheProvider,
+    useConstantResource: useGlobalConstantResource,
+} = create();
+
+function MyResource() {
+    // Put current user resource into global cache
+    const [currentUser] = useGlobalConstantResource(fetchCurrentUser);
+    // And other resources into local one
+    const [dataSource] = useConstantResource(fetchList);
+
+    return (
+        // ...
+    );
+}
+
+<GlobalCacheProvider>
+    <CacheProvider>
+        <MyResource />
+    </CacheProvider>
+</GlobalCacheProvider>
+```
+
+`create` function also accepts an option object to customize context's display name:
+
+```ts
+interface CreateOptions {
+    cacheContextDisplayName?: string;
+    configContextDisplayName?: string;
+}
+```

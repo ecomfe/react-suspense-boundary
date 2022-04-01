@@ -78,8 +78,5 @@
   "peerDependencies": {
     "react": ">= 17"
   },
-  "packageManager": "yarn@3.1.0",
-  "resolutions": {
-    "@types/react@17.0.38": "patch:@types/react@npm:17.0.38#.yarn/patches/@types-react-npm-17.0.38-e8f2055f5b"
-  }
+  "packageManager": "yarn@3.1.0"
 }

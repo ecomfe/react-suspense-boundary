@@ -1,46 +1,73 @@
-import {ComponentProps, ComponentType, ComponentRef, forwardRef} from 'react';
-import {default as Boundary, SuspenseBoundaryProps} from './Boundary.js';
+import {createSuspenseBoundary, SuspenseBoundaryProps} from './boundary.js';
+import {createCacheProvider} from './cache.js';
+import {createConfigProvider} from './config.js';
 
-export {Boundary};
-export {
-    default as CacheProvider,
-    useResource,
+interface CreateOptions {
+    cacheContextDisplayName?: string;
+    configContextDisplayName?: string;
+}
+
+export const create = ({cacheContextDisplayName, configContextDisplayName}: CreateOptions = {}) => {
+    const {
+        BoundaryConfigProvider,
+        useBoundaryConfig,
+    } = createConfigProvider({contextDisplayName: configContextDisplayName});
+    const {
+        CacheProvider,
+        useConstantResource,
+        useExpireCache,
+        usePreloadConstantResource,
+        usePreloadResource,
+        usePreloadResourceCallback,
+        useRefreshCache,
+        useResource,
+    } = createCacheProvider({contextDisplayName: cacheContextDisplayName});
+    const {Boundary, withBoundary} = createSuspenseBoundary({useBoundaryConfig, useExpireCache});
+
+    return {
+        BoundaryConfigProvider,
+        CacheProvider,
+        Boundary,
+        useBoundaryConfig,
+        useConstantResource,
+        usePreloadConstantResource,
+        usePreloadResource,
+        usePreloadResourceCallback,
+        useRefreshCache,
+        useResource,
+        withBoundary,
+    };
+};
+
+const {
+    BoundaryConfigProvider,
+    CacheProvider,
+    Boundary,
+    useBoundaryConfig,
     useConstantResource,
-    usePreloadResource,
     usePreloadConstantResource,
+    usePreloadResource,
     usePreloadResourceCallback,
-    useExpireCache,
     useRefreshCache,
-} from './CacheProvider.js';
-export {default as ErrorBoundary} from './ErrorBoundary.js';
-export {default as BoundaryConfigProvider} from './ConfigProvider.js';
+    useResource,
+    withBoundary,
+} = create();
 
+export {
+    BoundaryConfigProvider,
+    CacheProvider,
+    Boundary,
+    useBoundaryConfig,
+    useConstantResource,
+    usePreloadConstantResource,
+    usePreloadResource,
+    usePreloadResourceCallback,
+    useRefreshCache,
+    useResource,
+    withBoundary,
+};
+
+export {default as ErrorBoundary} from './ErrorBoundary.js';
 export type {SuspenseBoundaryProps};
 export type {RenderErrorOptions} from './ErrorBoundary.js';
 export type {CacheController, ResourceController} from './interface.js';
-
-type Factory<T, P> = T | ((props: P) => T);
-
-export interface WithBoundaryOptions<P = unknown> extends Partial<Omit<SuspenseBoundaryProps, 'pendingFallback'>> {
-    pendingFallback?: Factory<SuspenseBoundaryProps['pendingFallback'], P>;
-}
-
-export function withBoundary(options: WithBoundaryOptions = {}) {
-    const {pendingFallback: pendingFactory, ...boundaryProps} = options;
-
-    return function withBoundaryIn<P>(ComponentIn: ComponentType<P>): ComponentType<P> {
-        const ComponentOut = forwardRef<ComponentRef<typeof ComponentIn>, ComponentProps<typeof ComponentIn>>(
-            function ComponentOut(props, ref) {
-                const pendingFallback = typeof pendingFactory === 'function' ? pendingFactory(props) : pendingFactory;
-
-                return (
-                    <Boundary pendingFallback={pendingFallback} {...boundaryProps}>
-                        <ComponentIn ref={ref} {...props} />
-                    </Boundary>
-                );
-            }
-        );
-        ComponentOut.displayName = `withBoundary(${ComponentIn.displayName || ComponentIn.name || 'Unknown'})`;
-        return ComponentOut as unknown as typeof ComponentIn;
-    };
-}
