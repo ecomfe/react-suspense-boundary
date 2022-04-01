@@ -7,7 +7,6 @@ import {defineConfig} from 'vite';
 export default defineConfig({
     plugins: [react()],
     test: {
-        global: true,
         environment: 'jsdom',
         deps: {
             inline: ['@testing-library/user-event'],
