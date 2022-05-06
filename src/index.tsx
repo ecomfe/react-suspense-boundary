@@ -21,6 +21,8 @@ export const create = ({cacheContextDisplayName, configContextDisplayName}: Crea
         usePreloadResourceCallback,
         useRefreshCache,
         useResource,
+        useResourceController,
+        useConstantResourceController,
     } = createCacheProvider({contextDisplayName: cacheContextDisplayName});
     const {Boundary, withBoundary} = createSuspenseBoundary({useBoundaryConfig, useExpireCache});
 
@@ -35,6 +37,8 @@ export const create = ({cacheContextDisplayName, configContextDisplayName}: Crea
         usePreloadResourceCallback,
         useRefreshCache,
         useResource,
+        useResourceController,
+        useConstantResourceController,
         withBoundary,
     };
 };
@@ -50,6 +54,8 @@ const {
     usePreloadResourceCallback,
     useRefreshCache,
     useResource,
+    useResourceController,
+    useConstantResourceController,
     withBoundary,
 } = create();
 
@@ -63,6 +69,8 @@ export {
     usePreloadResource,
     usePreloadResourceCallback,
     useRefreshCache,
+    useResourceController,
+    useConstantResourceController,
     useResource,
     withBoundary,
 };
