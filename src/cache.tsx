@@ -162,6 +162,14 @@ export const createCacheProvider = ({contextDisplayName = 'BoundaryCacheContext'
         return useResourceInternal(api);
     }
 
+    function useResourceController<I, O>(api: Async<I, O>, params: I) {
+        return useResourceInternal(api, params)[1];
+    }
+
+    function useConstantResourceController<O>(api: ConstantAsync<O>) {
+        return useResourceInternal(api)[1];
+    }
+
     function usePreloadResource<I, O>(api: Async<I, O>, params: I): void {
         const {cache} = useContext(Context);
         const key = stringifyKey(params);
@@ -200,6 +208,8 @@ export const createCacheProvider = ({contextDisplayName = 'BoundaryCacheContext'
         useRefreshCache,
         useResource,
         useConstantResource,
+        useResourceController,
+        useConstantResourceController,
         usePreloadResource,
         usePreloadConstantResource,
         usePreloadResourceCallback,

@@ -1,6 +1,6 @@
 import {test, expect} from 'vitest';
 import {ReactNode} from 'react';
-import {renderHook} from '@testing-library/react-hooks';
+import {renderHook} from '@testing-library/react-hooks/dom';
 import {createCacheProvider} from '../cache';
 
 const {CacheProvider, useConstantResource} = createCacheProvider({contextDisplayName: 'CacheContext'});
@@ -20,10 +20,10 @@ function Provider({children}: ProviderProps) {
 const api = () => Promise.resolve(123);
 
 test('testable', async () => {
-    const {result, waitForNextUpdate} = renderHook(
+    const {result} = renderHook(
         () => useConstantResource(api),
         {wrapper: Provider}
     );
-    await waitForNextUpdate();
+    await new Promise(r => setTimeout(r, 100));
     expect(result.current[0]).toBe(123);
 });
