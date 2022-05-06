@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.1](https://github.com/ecomfe/react-suspense-boundary/compare/v2.3.0...v2.3.1) (2022-05-06)
+
+
+### Bug Fixes
+
+* add useResourceController to index exports ([e790d7d](https://github.com/ecomfe/react-suspense-boundary/commit/e790d7ded08ff3660698e42e7c2f95830d1c4378))
+
 ## [2.3.0](https://github.com/ecomfe/react-suspense-boundary/compare/v2.2.0...v2.3.0) (2022-05-06)
 
 
