@@ -11,6 +11,7 @@ import SelfLoading from '../SelfLoading';
 import ManualControl from '../ManualControl';
 import AsyncError from '../AsyncError';
 import ErrorRecovery from '../ErrorRecovery';
+// import SuspenseError from '../SuspenseError';
 
 const globalStyle = css`
     html,
@@ -39,6 +40,7 @@ const renderError = () => <div>ERROR!</div>;
 
 export default () => (
     <BoundaryConfigProvider pendingFallback={null} renderError={renderError}>
+        {/* <SuspenseError /> */}
         <Global styles={globalStyle} />
         <Layout>
             <Header />
