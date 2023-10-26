@@ -3,7 +3,11 @@ import {useResource, useConstantResource} from 'react-suspense-boundary';
 import api from '../../api/user';
 import {Content} from './Content';
 
-const noCrash = () => Promise.resolve();
+const noCrash = () => {
+    // eslint-disable-next-line no-console
+    console.log('no crash');
+    return Promise.resolve();
+};
 
 const noop = () => {};
 

@@ -31,6 +31,7 @@ export default function Sidebar({className}: Props) {
                 <NavItem to="/manual-control">Manual Expire And Refresh</NavItem>
                 <NavItem to="/async-error">Async Error Boundary</NavItem>
                 <NavItem to="/error-recovery">Recover From Error</NavItem>
+                <NavItem to="/concurrent-lazy-loading">Concurrent Lazy Loading</NavItem>
             </nav>
             <Title>Related Source</Title>
             <nav>
