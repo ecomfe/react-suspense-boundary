@@ -71,7 +71,7 @@
     "standard-version": "^9.3.2",
     "stylelint": "^14.8.2",
     "typescript": "next",
-    "vite": "^2.9.8",
+    "vite": "^2.9.13",
     "vitest": "^0.10.4"
   },
   "peerDependencies": {
