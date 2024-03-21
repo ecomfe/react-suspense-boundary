@@ -66,8 +66,8 @@ export interface ContextValue {
 }
 
 const promiseWithResolvers = () => {
-    let resolve = null as unknown as () => void;
-    let reject = null as unknown as () => void;
+    let resolve = () => {};
+    let reject = () => {};
     const promise = new Promise<void>((resolver, rejector) => {
         resolve = resolver;
         reject = rejector;
