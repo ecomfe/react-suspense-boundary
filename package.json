@@ -80,7 +80,7 @@
   },
   "packageManager": "yarn@3.1.0",
   "resolutions": {
-    "@types/react": "17.x",
-    "@types/react-dom": "17.x"
+    "@types/react": "18.x",
+    "@types/react-dom": "18.x"
   }
 }

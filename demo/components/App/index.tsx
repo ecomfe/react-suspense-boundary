@@ -1,3 +1,4 @@
+import {Suspense, lazy} from 'react';
 import styled from '@emotion/styled';
 import {Global, css} from '@emotion/react';
 import {Routes, Route, Navigate} from 'react-router-dom';
@@ -13,6 +14,7 @@ import AsyncError from '../AsyncError';
 import ErrorRecovery from '../ErrorRecovery';
 // import SuspenseError from '../SuspenseError';
 
+const SuspenseError = lazy(() => import('../SuspenseError'));
 const globalStyle = css`
     html,
     body {
@@ -55,6 +57,14 @@ export default () => (
                         <Route path="/manual-control" element={<ManualControl />} />
                         <Route path="/async-error" element={<AsyncError />} />
                         <Route path="/error-recovery" element={<ErrorRecovery />} />
+                        <Route
+                            path="/suspense"
+                            element={
+                                <Suspense fallback={<h1 style={{color: 'red'}}>Loading...</h1>}>
+                                    <SuspenseError />
+                                </Suspense>
+                            }
+                        />
                         <Route element={<Navigate replace to="/simple" />} />
                     </Routes>
                 </Main>

@@ -1,27 +1,21 @@
 import {Boundary, CacheProvider, useResource} from 'react-suspense-boundary';
-
-// const OtherComponents = lazy(() => import('./OtherComponent'));
-
-const getData = () => new Promise<string>((resolve, reject) => {
-    console.log('发起请求');
+let count = 0;
+const getData = () => new Promise<string>(resolve => {
+    count++;
     setTimeout(() => {
-        console.log('请求返回');
         resolve('数据返回了');
-        // reject('请求出错了');
-    }, 10);
+    }, 100);
 });
+
 const param = {};
 const Component = () => {
-    console.log('Component before useResource');
     const [data] = useResource(getData, param);
-    console.log('Component after useResource');
-    return <>{data}</>;
+    return <>{data}, 请求发起了{count}次</>;
 };
 
 const Error = () => <h1>Error</h1>;
 
 export default function FetchComponents() {
-    // console.log('FetchComponents');
     return (
         <div>
             <CacheProvider>

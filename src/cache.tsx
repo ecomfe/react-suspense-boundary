@@ -62,16 +62,23 @@ const fetchToCache = (cache: ObservableCache, api: LooseApi, params: unknown, op
 export interface ContextValue {
     cache: ObservableCache;
     promiseResolver: () => void;
-    promise: Promise<void>;
+    promisePendingComponentMount: Promise<void>;
 }
+
+const promiseWithResolvers = () => {
+    let resolve = null as unknown as () => void;
+    let reject = null as unknown as () => void;
+    const promise = new Promise<void>((resolver, rejector) => {
+        resolve = resolver;
+        reject = rejector;
+    });
+    return {promise, resolve, reject} as const;
+};
 
 const createCacheContextValue = () => {
     const cache = new ObservableCache(new WeakMap());
-    let promiseResolver = null as unknown as () => void;
-    const promise = new Promise<void>(resolve => {
-        promiseResolver = resolve;
-    });
-    return {cache, promiseResolver, promise};
+    const {promise, resolve} = promiseWithResolvers();
+    return {cache, promiseResolver: resolve, promisePendingComponentMount: promise, num: Math.random()};
 };
 
 export interface Props {
@@ -89,9 +96,12 @@ export const createCacheProvider = ({contextDisplayName = 'BoundaryCacheContext'
     function CacheProvider({children}: Props) {
         const ref = useRef(createCacheContextValue());
         // 如果请求被响应的太快 就会在 CacheProvider 这个组件被 mount 之前就将 promise 解决，
-        // 从而触发 Suspense 的渲染流程，而 CacheProvider 这个组件还没有被 mount，就会重新 Fiber
-        // Context 也会被重置。最终造成重复渲染。useLayoutEffect 会在 commit 阶段执行。
-        // 这时候 CacheProvider 这个组件就已经被 mount 了，可以触发 Suspense 的重新渲染。
+        // 在并发模式下就会打断当前的渲染任务，触发一个新的渲染任务，导致重新生成 FiberTree，
+        // 也就是本轮生成的 FiberTree（Tree—1）还没有替换旧的 FiberTree（Tree—0），
+        // 所以新的 FiberTree（Tree—2），还是根据旧的 FiberTree（Tree—0） 生成的，
+        // 所以生成 Tree—2 的时候会重新 mount CacheProvider 这个组件，Context 也会被重置
+        // 最终造成重复渲染。useLayoutEffect 会在 commit 阶段执行。
+        // 这时候 CacheProvider 这个组件就已经被 mount 了，即使触发 Suspense 导致的重新渲染，也能获得稳定的引用。
         useLayoutEffect(
             () => {
                 ref.current.promiseResolver();
@@ -125,7 +135,7 @@ export const createCacheProvider = ({contextDisplayName = 'BoundaryCacheContext'
     }
 
     function useResourceInternal<O>(api: LooseApi<O>, params?: unknown): [O, ResourceController] {
-        const {cache, promise: promiseReturn} = useContext(Context);
+        const {cache, promisePendingComponentMount} = useContext(Context);
         const key = useMemo(
             () => stringifyKey(params),
             [params]
@@ -153,7 +163,7 @@ export const createCacheProvider = ({contextDisplayName = 'BoundaryCacheContext'
             // 所以这里调用`init`来跳过对外部的通知，因为`render`本身是个同步、线性的过程，
             // 所以能保证这里更新后，其它组件同一个周期内的`render`也能读取到，不会造成重复的请求
             const promise = fetchToCache(cache, api, params, {computedKey: key, workingType: 'init'});
-            throw promise.then(() => promiseReturn);
+            throw Promise.all([promise, promisePendingComponentMount]);
         }
 
         switch (state.kind) {
