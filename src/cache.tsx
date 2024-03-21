@@ -78,7 +78,7 @@ const promiseWithResolvers = () => {
 const createCacheContextValue = () => {
     const cache = new ObservableCache(new WeakMap());
     const {promise, resolve} = promiseWithResolvers();
-    return {cache, promiseResolver: resolve, promisePendingComponentMount: promise, num: Math.random()};
+    return {cache, promiseResolver: resolve, promisePendingComponentMount: promise};
 };
 
 export interface Props {

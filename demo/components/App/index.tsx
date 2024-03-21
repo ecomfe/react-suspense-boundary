@@ -12,9 +12,8 @@ import SelfLoading from '../SelfLoading';
 import ManualControl from '../ManualControl';
 import AsyncError from '../AsyncError';
 import ErrorRecovery from '../ErrorRecovery';
-// import SuspenseError from '../SuspenseError';
 
-const SuspenseError = lazy(() => import('../SuspenseError'));
+const ConcurrentLazyLoading = lazy(() => import('../ConcurrentLazyLoading'));
 const globalStyle = css`
     html,
     body {
@@ -42,7 +41,6 @@ const renderError = () => <div>ERROR!</div>;
 
 export default () => (
     <BoundaryConfigProvider pendingFallback={null} renderError={renderError}>
-        {/* <SuspenseError /> */}
         <Global styles={globalStyle} />
         <Layout>
             <Header />
@@ -58,10 +56,10 @@ export default () => (
                         <Route path="/async-error" element={<AsyncError />} />
                         <Route path="/error-recovery" element={<ErrorRecovery />} />
                         <Route
-                            path="/suspense"
+                            path="/concurrent-lazy-loading"
                             element={
-                                <Suspense fallback={<h1 style={{color: 'red'}}>Loading...</h1>}>
-                                    <SuspenseError />
+                                <Suspense fallback={<h1>Loading...</h1>}>
+                                    <ConcurrentLazyLoading />
                                 </Suspense>
                             }
                         />
