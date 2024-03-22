@@ -75,8 +75,12 @@ const promiseWithResolvers = () => {
     return {promise, resolve, reject};
 };
 
-const createCacheContextValue = () => {
+const createCacheContextValue = (isGlobalCache = false) => {
     const cache = new ObservableCache(new WeakMap());
+    // 如果是全局缓存，在闭包中存在，并不依赖 React 组件的挂载，不需要挂载
+    if (isGlobalCache) {
+        return {cache, promiseResolver: () => {}, promisePendingComponentMount: Promise.resolve()};
+    }
     const {promise, resolve} = promiseWithResolvers();
     return {cache, promiseResolver: resolve, promisePendingComponentMount: promise};
 };
@@ -90,9 +94,8 @@ interface Options {
 }
 
 export const createCacheProvider = ({contextDisplayName = 'BoundaryCacheContext'}: Options) => {
-    const Context = createContext<ContextValue>(createCacheContextValue());
+    const Context = createContext<ContextValue>(createCacheContextValue(true));
     Context.displayName = contextDisplayName;
-
     function CacheProvider({children}: Props) {
         const ref = useRef(createCacheContextValue());
         // 如果请求被响应的太快 就会在 CacheProvider 这个组件被 mount 之前就将 promise 解决，
