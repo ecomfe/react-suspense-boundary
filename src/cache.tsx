@@ -66,8 +66,8 @@ export interface ContextValue {
 }
 
 const promiseWithResolvers = () => {
-    let resolve = () => {};
-    let reject = () => {};
+    let resolve: (value?: (PromiseLike<void> | void)) => void = () => {};
+    let reject: (reason?: any) => void = () => {};
     const promise = new Promise<void>((resolver, rejector) => {
         resolve = resolver;
         reject = rejector;
