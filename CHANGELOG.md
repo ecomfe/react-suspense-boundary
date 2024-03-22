@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/ecomfe/react-suspense-boundary/compare/v2.3.1...v3.0.0) (2024-03-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* 需要React 18并完全兼容并发特性
+
+### Bug Fixes
+
+* Boundary.js import error ([68d399e](https://github.com/ecomfe/react-suspense-boundary/commit/68d399ebf14da0a1edc3d8e60fc80cb65566d6d1))
+* Global cache does't need to wait for components to be mounted ([92c3cca](https://github.com/ecomfe/react-suspense-boundary/commit/92c3cca6a8c3563fa2770242191f3b2070304a8d))
+* 修复并发模式下缓存会失效的 bug ([f5394fe](https://github.com/ecomfe/react-suspense-boundary/commit/f5394fe99bc180064f85400929224bade512be60))
+
+
+* 更新依赖并要求React 18 ([6b6f303](https://github.com/ecomfe/react-suspense-boundary/commit/6b6f303276c08d72297aa4889217128c9538816b))
+
 ### [2.3.1](https://github.com/ecomfe/react-suspense-boundary/compare/v2.3.0...v2.3.1) (2022-05-06)
 
 
