@@ -11,7 +11,7 @@ import {
 } from './interface.js';
 import {ObservableCache} from './ObservableCache.js';
 import SuspenseError from './SuspenseError.js';
-import {stringifyKey} from './utils.js';
+import {promiseWithResolvers, stringifyKey} from './utils.js';
 
 interface FetchToCacheOptions {
     computedKey?: string;
@@ -65,17 +65,7 @@ export interface ContextValue {
     promisePendingComponentMount: Promise<void>;
 }
 
-const promiseWithResolvers = () => {
-    let resolve: (value?: (PromiseLike<void> | void)) => void = () => {};
-    let reject: (reason?: any) => void = () => {};
-    const promise = new Promise<void>((resolver, rejector) => {
-        resolve = resolver;
-        reject = rejector;
-    });
-    return {promise, resolve, reject};
-};
-
-const createCacheContextValue = (isGlobalCache = false) => {
+const createCacheContextValue = (isGlobalCache = false): ContextValue => {
     const cache = new ObservableCache(new WeakMap());
     // 如果是全局缓存，在闭包中存在，并不依赖 React 组件的挂载，不需要挂载
     if (isGlobalCache) {
@@ -102,7 +92,7 @@ export const createCacheProvider = ({contextDisplayName = 'BoundaryCacheContext'
         // 在并发模式下就会打断当前的渲染任务，触发一个新的渲染任务，导致重新生成 FiberTree，
         // 也就是本轮生成的 FiberTree（Tree—1）还没有替换旧的 FiberTree（Tree—0），
         // 所以新的 FiberTree（Tree—2），还是根据旧的 FiberTree（Tree—0） 生成的，
-        // 所以生成 Tree—2 的时候会重新 mount CacheProvider 这个组件，Context 也会被重置
+        // 所以生成 Tree—2 的时候会重新 mount CacheProvider 这个组件，Context 也会被重置，
         // 最终造成重复渲染。useLayoutEffect 会在 commit 阶段执行。
         // 这时候 CacheProvider 这个组件就已经被 mount 了，即使触发 Suspense 导致的重新渲染，也能获得稳定的引用。
         useLayoutEffect(
