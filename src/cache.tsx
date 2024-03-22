@@ -72,7 +72,7 @@ const promiseWithResolvers = () => {
         resolve = resolver;
         reject = rejector;
     });
-    return {promise, resolve, reject} as const;
+    return {promise, resolve, reject};
 };
 
 const createCacheContextValue = () => {
