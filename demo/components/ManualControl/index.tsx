@@ -1,5 +1,5 @@
 import {Boundary} from 'react-suspense-boundary';
-import UserList from '../UserList';
+import UserList from '../UserList/index.js';
 // import SourceCode from '../SourceCode';
 // import source from '../SourceCode/loader!./index.js';
 

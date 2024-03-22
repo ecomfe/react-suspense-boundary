@@ -19,11 +19,11 @@ const timeout = (time: number) => new Promise(resolve => setTimeout(resolve, tim
 
 const user = (): User => {
     return {
-        id: faker.datatype.uuid(),
-        name: faker.name.lastName(),
-        phone: faker.phone.phoneNumber(),
+        id: faker.string.uuid(),
+        name: faker.person.lastName(),
+        phone: faker.phone.number(),
         email: faker.internet.email(),
-        lastSignedIn: faker.date.recent(12),
+        lastSignedIn: faker.date.recent({days: 12, refDate: Date.now()}),
     };
 };
 

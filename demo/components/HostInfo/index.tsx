@@ -1,10 +1,10 @@
 import {useEffect} from 'react';
 import styled from '@emotion/styled';
 import {useResource, useConstantResource, usePreloadResourceCallback} from 'react-suspense-boundary';
-import api, {Host} from '../../api/host';
-import Row from './Row';
-import TimeChart from './TimeChart';
-import HostSelect from './HostSelect';
+import api, {Host} from '../../api/host.js';
+import Row from './Row.js';
+import TimeChart from './TimeChart.js';
+import HostSelect from './HostSelect.js';
 
 const Layout = styled.div`
     display: flex;

@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import {Button} from 'antd';
 import {Boundary, RenderErrorOptions} from 'react-suspense-boundary';
-import Progress from '../Progress';
-import Loading from '../Loading';
+import Progress from '../Progress/index.js';
+import Loading from '../Loading/index.js';
 // import SourceCode from '../SourceCode';
 // import source from '../SourceCode/loader!./index.js';
 

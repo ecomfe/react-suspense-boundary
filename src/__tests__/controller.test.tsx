@@ -1,7 +1,7 @@
 import {test, expect} from 'vitest';
 import {ReactNode} from 'react';
 import {renderHook, act} from '@testing-library/react-hooks/dom';
-import {createCacheProvider} from '../cache';
+import {createCacheProvider} from '../cache.js';
 
 const {CacheProvider, useConstantResource} = createCacheProvider({contextDisplayName: 'CacheContext'});
 

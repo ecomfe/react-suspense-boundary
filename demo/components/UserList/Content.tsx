@@ -1,7 +1,7 @@
 import {useMemo} from 'react';
 import styled from '@emotion/styled';
 import {Table, Button, Space} from 'antd';
-import {User} from '../../api/user';
+import {User} from '../../api/user.js';
 
 const columns = [
     {

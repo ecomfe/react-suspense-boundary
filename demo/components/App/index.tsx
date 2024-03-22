@@ -3,17 +3,17 @@ import styled from '@emotion/styled';
 import {Global, css} from '@emotion/react';
 import {Routes, Route, Navigate} from 'react-router-dom';
 import {BoundaryConfigProvider} from 'react-suspense-boundary';
-import Header from '../Header';
-import Sidebar from '../Sidebar';
-import Simple from '../Simple';
-import Multiple from '../Multiple';
-import Nested from '../Nested';
-import SelfLoading from '../SelfLoading';
-import ManualControl from '../ManualControl';
-import AsyncError from '../AsyncError';
-import ErrorRecovery from '../ErrorRecovery';
+import Header from '../Header/index.js';
+import Sidebar from '../Sidebar/index.js';
+import Simple from '../Simple/index.js';
+import Multiple from '../Multiple/index.js';
+import Nested from '../Nested/index.js';
+import SelfLoading from '../SelfLoading/index.js';
+import ManualControl from '../ManualControl/index.js';
+import AsyncError from '../AsyncError/index.js';
+import ErrorRecovery from '../ErrorRecovery/index.js';
 
-const ConcurrentLazyLoading = lazy(() => import('../ConcurrentLazyLoading'));
+const ConcurrentLazyLoading = lazy(() => import('../ConcurrentLazyLoading/index.js'));
 const globalStyle = css`
     html,
     body {

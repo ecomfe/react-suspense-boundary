@@ -5,7 +5,7 @@ export default configure(
     {
         build: {
             appTitle: 'React Suspense Boundary',
-            uses: ['antd', 'emotion'],
+            uses: ['antd@4', 'emotion'],
             finalize: (viteConfig, entry) => {
                 if (entry.usage === 'build') {
                     viteConfig.base = '/react-suspense-boundary';

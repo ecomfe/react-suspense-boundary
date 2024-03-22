@@ -1,5 +1,13 @@
-import {useRef, useMemo, useCallback, useContext, createContext, ReactNode, useLayoutEffect} from 'react';
-import {useSyncExternalStore} from 'use-sync-external-store/shim';
+import {
+    useRef,
+    useMemo,
+    useCallback,
+    useContext,
+    createContext,
+    useLayoutEffect,
+    useSyncExternalStore,
+    ReactNode,
+} from 'react';
 import {
     Async,
     ResourceController,

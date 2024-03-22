@@ -1,5 +1,5 @@
 import {Boundary, CacheProvider} from 'react-suspense-boundary';
-import UserList from '../../../components/UserList';
+import UserList from '../../components/UserList/index.js';
 
 const Error = () => <h1>Error</h1>;
 

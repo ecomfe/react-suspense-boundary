@@ -1,6 +1,6 @@
+import {useRef, useEffect} from 'react';
 import styled from '@emotion/styled';
 import * as echarts from 'echarts';
-import {useRef, useEffect} from 'react';
 
 const Layout = styled.div`
     width: 400px;

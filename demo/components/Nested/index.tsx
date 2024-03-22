@@ -1,8 +1,8 @@
 import {useState} from 'react';
 import {Boundary} from 'react-suspense-boundary';
-import Loading from '../Loading';
-import UserList from '../UserList';
-import HostInfo from '../HostInfo';
+import Loading from '../Loading/index.js';
+import UserList from '../UserList/index.js';
+import HostInfo from '../HostInfo/index.js';
 // import SourceCode from '../SourceCode';
 // import source from '../SourceCode/loader!./index.js';
 // import c from './index.less';

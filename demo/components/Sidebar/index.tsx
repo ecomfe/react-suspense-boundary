@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import NavItem from './NavItem';
+import NavItem from './NavItem.js';
 
 const GITHUB_URL_BASE = 'https://github.com/ecomfe/react-suspense-boundary';
 

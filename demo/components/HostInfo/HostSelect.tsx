@@ -1,7 +1,7 @@
 import {useCallback} from 'react';
 import {Tag} from 'antd';
 import styled from '@emotion/styled';
-import {Host} from '../../api/host';
+import {Host} from '../../api/host.js';
 
 const CheckableTag = styled(Tag.CheckableTag)`
     font-size: 14px;

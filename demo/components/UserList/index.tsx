@@ -1,7 +1,7 @@
 import {useState, useReducer} from 'react';
 import {useResource, useConstantResource} from 'react-suspense-boundary';
-import api from '../../api/user';
-import {Content} from './Content';
+import api from '../../api/user.js';
+import {Content} from './Content.js';
 
 const noCrash = () => {
     // eslint-disable-next-line no-console

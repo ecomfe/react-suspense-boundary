@@ -18,12 +18,12 @@ export class ObservableCache {
     }
 
     init(api: LooseApi, key: string, promise: Promise<unknown>): void {
-        const family = this.getFamilySafe(api)!;
+        const family = this.getFamilySafe(api);
         family.set(key, {promise, kind: 'pending'});
     }
 
     set(api: LooseApi, key: string, value: ResourceState<unknown>): void {
-        const family = this.getFamilySafe(api)!;
+        const family = this.getFamilySafe(api);
         family.set(key, value);
         this.version++;
         this.notify(api, key);

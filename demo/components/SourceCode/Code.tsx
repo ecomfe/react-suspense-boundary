@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import {Global, css} from '@emotion/react';
 import Refractor from 'react-refractor';
-import jsx from 'refractor/lang/jsx';
-import tsx from 'refractor/lang/tsx';
-import bash from 'refractor/lang/bash';
+import jsx from 'refractor/lang/jsx.js';
+import tsx from 'refractor/lang/tsx.js';
+import bash from 'refractor/lang/bash.js';
 import {useMemo} from 'react';
 
 Refractor.registerLanguage(jsx);

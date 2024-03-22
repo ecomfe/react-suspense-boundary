@@ -1,6 +1,6 @@
 import {Suspense, lazy} from 'react';
 
-const LazyComponent = lazy(() => import('./components/LazyComponent'));
+const LazyComponent = lazy(() => import('./LazyComponent.js'));
 
 function ConcurrentLazyLoading() {
     return (

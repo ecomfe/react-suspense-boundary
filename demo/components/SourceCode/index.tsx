@@ -1,8 +1,8 @@
 import {useReducer} from 'react';
 import styled from '@emotion/styled';
 import 'prism-themes/themes/prism-vs.css';
-import Toggle from './Toggle';
-import Code from './Code';
+import Toggle from './Toggle.js';
+import Code from './Code.js';
 
 const Layout = styled.div`
     margin-top: 10px;

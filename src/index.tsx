@@ -1,4 +1,4 @@
-import {createSuspenseBoundary, SuspenseBoundaryProps} from './Boundary.js';
+import {createSuspenseBoundary, SuspenseBoundaryProps} from './boundary.js';
 import {createCacheProvider} from './cache.js';
 import {createConfigProvider} from './config.js';
 

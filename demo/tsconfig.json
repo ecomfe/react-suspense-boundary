@@ -2,9 +2,10 @@
     "compilerOptions": {
         "jsx": "react-jsx",
         "target": "ES2018",
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext",
+        "module": "ESNext",
+        "moduleResolution": "Node",
         "noEmit": true,
+        "esModuleInterop": true,
         "allowJs": false,
         "strict": true,
         "noImplicitAny": true,
@@ -12,12 +13,9 @@
         "skipLibCheck": true,
         "baseUrl": ".",
         "declaration": true,
+        "allowSyntheticDefaultImports": true,
         "paths": {
             "react-suspense-boundary": ["../src"]
         }
-    },
-    "include": [
-        "src",
-        "*.ts"
-    ]
+    }
 }

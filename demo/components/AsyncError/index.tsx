@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import {FaBug} from 'react-icons/fa';
 import {Boundary} from 'react-suspense-boundary';
-import UserList from '../UserList';
-import Loading from '../Loading';
+import UserList from '../UserList/index.js';
+import Loading from '../Loading/index.js';
 // import SourceCode from '../SourceCode';
 // import source from '../SourceCode/loader!./index.js';
 
